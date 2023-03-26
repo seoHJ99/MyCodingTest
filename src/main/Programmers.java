@@ -18,35 +18,21 @@ public class Programmers {
 class Solution {
     public int solution(int n, int m, int[] section) {
         int answer = 0;
-        int start = 0;
-        int end = 0;
-        int distance = 0;
-        for(int i=0; i<section.length-1; i++){
-            if( (section[i+1] - section[i] + 1) > m ){
-                answer +=1;
-                start = section[i+1];
-                if(start != section[section.length-1]){
-                    end = section[i+2];
-                }
-                if(i+1 != section.length-1) {
-                    end = section[i + 2];
-                }
-                if(end == section[section.length-1]) {
-                    break;
+        int now = 0;
+        int next = 0;
+        for(int i =0; i<section.length-1; i++){
+            if(m >1) {
+                now = section[i];
+                    next = section[i + 1];
+                int distance = next - now + 1;
+                if (distance <= m) {
+                    answer += distance / m;
+                    if (distance % m > 0) {
+                        answer++;
+                    }
                 }
             }else {
-                start = section[i];
-            }
-            if(end != 0){
-                distance = end - start +1;
-            }
-            answer = answer + distance / m;
-            start = end;
-            if(distance % m >0){
-                answer++;
-            }
-            if( start == section[section.length-1]){
-                answer++;
+                answer = section.length;
             }
         }
         System.out.println(answer);
