@@ -1,8 +1,8 @@
 package com.example.demo;
 
 import com.example.demo.noSpringDiTest.*;
+import com.example.demo.scope.ProtoTypeBean;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -36,5 +36,14 @@ class DemoApplicationTests {
 	void everyBean(){
 		ApplicationContext ac = new AnnotationConfigApplicationContext(AutoAppConfig.class);
 
+	}
+
+	@Test
+	void prototypeScopeTest(){
+		AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(AutoAppConfig.class);
+		ProtoTypeBean bean1 = ac.getBean(ProtoTypeBean.class);
+		ProtoTypeBean bean2 = ac.getBean(ProtoTypeBean.class);
+		ProtoTypeBean bean3 = ac.getBean(ProtoTypeBean.class);
+		ac.close();
 	}
 }
