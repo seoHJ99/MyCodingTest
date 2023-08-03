@@ -2,13 +2,11 @@ package main.lv1;
 
 public class ParkWalking {
     public static void main(String[] args) {
-        Solution solution = new Solution();
+        ParkWalking solution = new ParkWalking();
         String[] park = {"SOO", "OOO", "XOO"};
         String[] routes = {"S 1","E 1", "W 2", "S 1", "W 1"};
         solution.solution(park, routes);
     }
-}
-class Solution {
     public int[] solution(String[] park, String[] routes) {
         int x =0;
         int y =0;
