@@ -5,14 +5,10 @@ import java.util.Stack;
 public class DeliveryBox {
 
     public static void main(String[] args) {
-        Solution solution = new Solution();
         int sample[] = {5, 4, 3, 2, 1};
-        solution.solution(sample);
+        solution(sample);
     }
-}
-
-class Solution {
-    public int solution(int[] order) {
+    public static int solution(int[] order) {
         int answer = 0;
         int idx = 0;
         int nowOrder = order[answer];
