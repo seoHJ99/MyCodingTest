@@ -6,7 +6,7 @@ import java.util.Set;
 public class PasswordOnlyTow {
     public static void main(String[] args) {
         PasswordOnlyTow pro = new PasswordOnlyTow();
-        pro.solution("a", "bcdefghijk", 20);
+        pro.solution("klmnopqrstuvwxyz", "abcdefghij", 20);
     }
 
     public String solution(String s, String skip, int index) {
@@ -19,22 +19,23 @@ public class PasswordOnlyTow {
             char spell = s.charAt(i);
             int moving = index;
             for(int j =1; j<= moving;){
-                char a = (char) (spell +j);
+                char a = (char) (spell + 1 );
                 if(skipChar.contains(a)){
-                    moving ++ ;
+                    j--;
                 }
-                if(j == moving){
-                    spell += moving;
-                    if(spell > 'z'){
-                        spell = 'a';
-                        moving = moving -j;
-                        j = 0;
-                        continue;
+                spell = a ;
+                if(spell >'z'){
+                    spell ='a';
+                    moving = index-j;
+                    if(moving == 0){
+                        moving =1;
                     }
+                    j = 0;
+                    continue;
                 }
                 j++;
             }
-            answer +=spell;
+            answer += spell;
         }
         System.out.println(answer);
         return answer;
