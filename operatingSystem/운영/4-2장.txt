@@ -1,0 +1,84 @@
+프로세스 관리
+프로세스 생성(Process Creation)
+부모 프로세스가 자식 프로세스 생성
+부모의 모든 문맥을 복사. 메모리의 코드 데이 터 스택을 그대로 복사. cpu문맥은 프로그램 카운터를 복제하여 생성됨.
+일부 운영체제에서는 처음에는 pc만 복제하고 나머지는 자식이 부모의 주소공간을 공유. 내용이 달라지면 그제야 나눠짐. 이 기법을 copy-on-write(COW) 라고 함. 라이트가 발생할때 카피를 함.
+fork() 시스템 콜은 새로운 프로세스를 생성함.
+부모를 그대로 복제해서.
+일단 복제 -=> 새로운것을 덮어 씌움.
+exec() 시스템콜이 덮어 씌우는 것.
+fork를 사용해서 프로세스를 만드는 c코드
+
+int main()
+{
+    int pid;
+    pid = fork();
+    if(pid ==0)
+           printf("Hello, I am child!\n");
+    else if(pid >0)
+           printf("Hello, I am parent!\n");
+}
+fork를 만나면 자식 프로세스 생성.
+fork로 생성된 자식 프로세스는 생성 코드 아래부터 실행.
+fork로 생성된 pid 는 0, 부모 프로세는 양수값을 갖게 되서 구분 가능.
+
+exec() 시스템 콜
+어떤 프로세스를 완전히 새로운 프로세스로 탈바꿈함.
+int main()
+{
+    int pid;
+    printf("aaaaaaaaaaa\n");
+    pid = fork();
+    if(pid ==0)
+   { printf("Hello, I am child!\n");
+     execlp("/bin/date", "/bin/date", (char*)0);
+   }
+    else if(pid >0)
+           printf("Hello, I am parent!\n");
+}
+결과:
+aaaaaaaaaaa
+Hello, I am parent!
+Hello, I am child!
+Thu Sep 14 15:25:09 KST 2023
+
+자식 프로세스가 date라는 프로그램으로 덮어씌워진다음 실행됨.
+자식이 없더라도 execlp 가 가능. 즉 fork를 안쓰고 execlp 가능. 그러면 execlp이후의 코드는 이미 새로운 프로그램으로 덮어씌워지기에 무시됨.
+
+
+wait() 시스템 콜
+프로세스 A가 wait() 시스템 콜을 호출하면
+  커널은 child가 종료될대 프로세스 a를 sleep 시킨다.(block 상태로 만듬)
+  child process가 종료되면 커널은 프로세스 a를 깨운다.(ready 상태로 만듬)
+
+
+exit() 시스템 콜
+시스템을 종료시킬때 사용하는 시스템 콜
+자발적 종료
+  명시적으로 프로그램을 끝냄. 컴파일러가 코드를 보고 알아서 exit를 시키지만 명시적으로 끝낼수도 있음
+비자발적 종료
+  부모 프로세스가 자식 프로세스를 강제 종료
+     한계치를 넘어선 자원 요청
+     더이상 시킬 일이 없음. 필요하지 않음.
+  키보드로 kill, berak 등을 친 경우
+  부모가 종료되는 경우
+     부모 프로세스가 종료하기 전에 자식들이 먼저 종료됨.
+fork(), exec(), wait(), exit()
+복제, 모두 덮어씀, 기다림, 끝
+
+프로세스 간 협력
+독립적 프로세스
+   프로세스는 기본적으로 독립적. 각자 주소공간을 가지고 수행됨으로 원칙적으로 다른 프로세스에 영향을 주지 못함.
+협력 프로세스
+   프로세스 협력 메커니즘을 통해 하나의 프로세스가 다른 프로세스의 수행에 영향을 미침
+프로세스 간 협력 메커니즘(IPC: Interprocess Communication)
+  메시지를 전달하는 방법
+       message passing: 커널을 통해 프로세스간 메시지를 전달.
+                             공유변수를 전혀 사용하지 않고 통신하는 방법
+                             통신0하려는 프로세스의 이름을 명시하면 direct communication,
+                             mailbox 또는 port를 통해 메시지를 간접 전달하면 indirect communication.
+  주소공간을 공유하는 방법
+       shared memory: 서로 다른 프로세스 간에도 일부 주소 공간을 공유하게 하는 메커니즘
+                            물리적인 메모리에 매핑할때 일부 공간이 공유되도록 매핑하여 서로간의 커뮤니케이션하는 방식.
+                            처음 커널이 주소 매핑만 해주고나면 커널은 관여 안함. 
+  thread : 사실상 하나의 프로세스이므로 프로세스 간 협력으로 보기는 어려우나, 동일한 process를 구성하는 thread들 간에는 주소공간을 공유하므로 협력 가능

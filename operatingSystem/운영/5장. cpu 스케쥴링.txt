@@ -1,0 +1,18 @@
+cpu 스케쥴링
+CPU burst : cpu만 연속적으로 사용하는 단계
+I/O burst : i/o 를 실행하고 있는 단계
+프로그램은 이 둘을 반복하며 실행됨.
+종류에 따라 i/o의 빈도나 길이가 다름.
+i/o bound job :cpu 를 짧게 쓰고 자주 i/o하는 작업. cpu로 계산하는 시간보다 i/o에 많은 시간이 필요함.
+cpu bound job : cpu를 길게 쓰고 i/o를 거의 안하는 작업. 주로 계산 위주.
+여러 종류의 job이 섞여있기 때문에 cpu스케쥴링 필요.
+cpu스케쥴링은 사람과 자주 상호작용하는 작업의 효율성을 위해 필요함
+cpu Scheduler : ready 상태의 여러 프로세스 중에서 어떤 cpu에 줄 프로세스를 고른다. 운영체제 내부의 코드임
+Dispatcher : 운영체제의 코드임. cpu 의 제어권을 cpu 스케줄러에 의해 선택된 프로세스에게 넘긴다. 이 과정은 context switch(문맥교환) 이라고 함
+cpu 스케쥴링이 필요한 경우는 프로세스에게 다음과 같은 상태 변화가 있는 경우이다.
+1. running -> blocked( 예: i/o 요청하는 시스템 콜)
+2. running -> ready (할당 시간 만료로 timer interrupt)
+3. blocked -> ready (i/o 완료 후 인터럽트. 레디로 바꾸고 실행중이던 프로세스로 넘어가는게 일반적이나 우선순위에 따라 바로 이 프로세스를 수행할수도 있음.)
+4. terminate
+1, 4는 nonpreemptive(=자진 반납)
+나머지는 전부 preemptive(=강제 반납) 

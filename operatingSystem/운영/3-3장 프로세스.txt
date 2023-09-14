@@ -1,0 +1,78 @@
+프로세스 개념
+프로세스: 실행중인 프로그램
+프로세스의 문맥. 프로세스의 현제 상태를 나타내기 위해 이해해야할 요소들
+cpu 수행 상태를 나타내는 하드웨어 문맥 - program counter, 각종 register
+현재 시점에 cpu가 인스트럭션을 어디까지 수행했는가? 현재 레지스터가 어떤 값을 ㄱ자지고 있는가?
+프로세스의 주소 공간 - code, data, stack
+코드, 데이터, 스택에 어떤 값을 가지고 있는가
+프로세스 관련 커널 자료주소 -PCB(process control block), kernel stack
+커널이 프로세스를 어떻게 평가하고 있는지 알려주는것이 pcb
+커널 주소 공간의 stack 에 각 프로세스별로 스택을 별도로 관리함
+
+프로세스의 상태
+프로세스는 상태가 변경되며 수행된다
+running : cpu를 잡고 인스트럭션을 수행중인 상태
+ready : cpu를 기다리는 상태(메모리 등 다른 조건을 모두 만족하고)
+blocked(waint, sleep) : cpu를 주어도 당장 인스트럭션을 수행할수 없는 상태. process 자신이 요청한 event(ex: i/o)가 즉시 만족되지 않아 기다리는 상태 ex: 디스크에서 파일 읽어오기
+new : 프로세스가 생성중인 상태
+terminated : 수행이 끝난 상태
+
+프로세스 상태 변화도
+new -> ready -> running -> (blocked) -> (ready) -> (running) -> terminated
+커널이 관리
+
+PCB( process control block) 커널 주소 공간의 data에 프로세스마다 존재함. 프로세스의 상태 저장
+운영체제가 각 프로세스를 관리하기 위해 프로세스당 유지하는 정보
+(1) os가 관리하는 정보
+ - process state, process id  :  프로세스의 상태(reday, running 등), 프로세스 id
+ - sceduling information, priority  :  cpu작업을 할당하기 위한 스케줄링 정보, cpu 작업의 우선순위
+(2) cpu 수행 관련 하드웨어 값
+ - program counter, registers : cpu에 어떤 레지스터 값을 넣어 사용하고 있었는가?
+(3) 메모리 관련
+ - code, data, stack 의 정보
+(4) 파일 관련
+ - open file descriptors
+
+문맥 교환( context switch)
+cpu가 한 프로세스에서 다른 프로세스로 넘겨주는 과정
+cpu 가 다른 프로세스로 넘어갈때 웅ㄴ영체제는 cpu를 내어주는 프로세스의 상태를 그 프로세스 전용 pcb에 저장. 다시 얻어올때 pcb에서 상태를 읽어들임
+시스템 콜이나 인터럽트가 발생할때 반드시 context switch가 일어나느 ㄴ것은 아님
+(1) user mode(사용자 프로세스) -> kernel mode -> user mode(사용자 프로세스 a) 즉, 다른 프로세스로 넘어가는 것이 아니면 컨텍스트 스위치가 아님.
+반면 a프로세스 -> 커널 모드 -> 프로세스 b라면 문맥교환
+스위치가 일어나면 pcb 의 부담이 훨씬 커짐(예. 캐시 메모리의 내용을 모두 삭제함). 스위치가 안일어나도 pcb에 save는 함
+
+프로세스를 스케쥴링 하기 위한 큐
+1. job queue : 현재 시스템 내에 있는 모든 프로세스의 집합
+2. ready queue : 현재 메모리 내에 있으면서 cpu를 잡아서 실행되기를 기다리는 프로세스 집합
+3. device queues : i/o 장치 처리를 기다리는 프로세스의 집합. 프로세스들은 큐를 오가며 수행됨.
+반드시 큐 순서대로 cpu를 잡는 것이 아니라 우선순위가 존재함.
+
+스케줄러(scheduler)
+
+long - term scheduler(장기 스케줄러 or job scheduler)
+시작 프로세스중 어떤 것을 ready queue로 보낼지 결정 - new -> running으로 보내는 것을 결정
+프로세스에 memory(및 각종 자원)을 주는 문제
+degree of muliprogramming을 제어 
+멀티 프로그램 : 메모리에 프로그램 여러개가 동시에 올라가는 것. 너무 많이 올리면 필요한 자원이 메모리에 없을수도 있고 조금 올리면 cpu가 놀수 있음.
+time shaing system에는 보통 장기 스케줄러가 없음( 무조건 ready). 일반적인 컴퓨터
+
+short - term scheduler(단기 스케줄러, or cpu schedluer)
+어떤 프로세스를 다음번에 running시킬지 결정
+프로세스에 cpu를 주는 문제
+milli초 단위로 빨라야 함
+
+medium-term scheduler(중기 스케줄러 or swapper)
+여유 공간 마련을 위해 프로세스를 통째로 메모리에서 디스크로 쫓아냄
+프로세스에게서 memory를 뺏는 문제
+degree of muliprogramming을 제어
+중기 스케줄로 인해 프로세스의 상태중 suspended(stopped)가 추가됨
+외부적인 이유로 프로세스의 수행이 정지된 상태 (blocked 와 다르게 메모리가 아예 없음)
+ 프로세스는 통째로 디스크에 swap out 된다.
+ 사용자가 프로그램을 일시 정지시킨 경우
+ 시스템이 여러 이유로 프로세스를 잠시 중단시킴(중기 스케줄러)
+
+blocked : 자신이 요청한 event때문에 정지. 만족되면 저절로 ready
+suspended : 외부에서 resume 해주어야 active 됨
+만약 프로세스가 시스템콜(인터럽트, 트랩 등)을 하여 운영체제가 실행되더라도 이는 프로세스가 커널 모드에서 running인 것.
+suspended blocke -> suspended ready는 가능
+즉 만약 i/o작업을 기다리던 상태에서 메모리가 박탈당했더라도 i/o작업이 끝난 상태로 전환은 가능함
