@@ -1,0 +1,51 @@
+cpu 스케쥴링 알고리즘은 크게 두가지 종류
+넌프리엄프티브한 방법(비선점형. 강제가 아님.)
+프리엄프티브한 방법(선점형. cpu를 강제로 빼앗음.)
+
+성능척도도 크게 두가지로 나뉨
+시스템 입장에서의 성능 척도 - cpu 이용률, 처리량
+  cpu이용률 cpu Utilization: 전체 시간에서 cpu가 놀지 않고 일한 시간. 가능한 바쁘게 일하는게 시스템 입장에서는 좋음.
+  처리량 throughput : 주어진 시간동안 얼마나 많은 작업을 처리했는가?
+프로그램 입장에서의 성능 척도 - 소요시간, 대기시간, 응답시간
+  소요시간(Turnaround Time) : 프로그램의 요청을 완료하는데 얼마나 많은 시간이 걸렸는가? 대기시간 포함됨.
+  대기시간 waiting time: 요청을 처리하는 동안 cpu를 얻었다 뺏겼다를 반복. 그때 cpu를 뺏겨서 기다리는 총시간이 대기시간
+  응답시간 response time: 처음으로 ready상태가 된 이후 cpu를 얻기까지의 시간. 처음으로 cpu를 얻기까지의 시간
+
+cpu스케쥴링 알고리즘
+FCFS( first come first served)
+먼저 오면 먼저 처리됨.
+Convoy effect : 앞서 온 프로세스가 너무 길면 뒤의 프로세스들의 대기 시간이 길어지는 현상.
+좋은 방법은 아님.
+
+SJF(shortest job first)
+cpu 사용시간, cpu 버스트 타임이 가장 짧으은 프로세스를 먼저 스케쥴함. 최소 대기시간을 보장.
+  two schemes:
+     nonpreemptive : 일단 cpu를 잡으면 이번 cpu burst 가 완료될때까지 cpu를 선점(preemptive)당하지 않음
+     preemptive : 현재 수행중인 프로세스의 남은 burst time보다 더 짧은 cpu burst time을 가지는 새로운 프로세스가 도착하면 cpu를 빼앗김. 이 방법을 SRTF(Shortest-remaining time first) 라고도 부름.
+문제점 : 
+starvation. 사용 시간이 짧은 프로세스를 극단적으로 선호하기에 사용시간이 긴 프로세스는 영원히 cpu를 할당받지 못할수도 있음.
+cpu사용 시간을 미리 알수 없음. 
+cpu사용 시간은 과거의 사용 시간 기록을 가지고 추정하는 방식. tn은 n번째 cpu 사용 시간. 타우n+1 은 n+1번째 cpu사용시간. 뭐래는거야.
+
+Priority Scheduling
+우선순위 스케쥴링. 우선순위 순으로 cpu할당.
+preemptive : 현재 프로세스보다 더 우선순위가 높은 프로세스에게 cpu를 주는것
+nonpreemptive : 현재 프로세스보다 우선순위가 높은 프로세스가 들어와도 일단 지금 것을 끝냄.
+일반적으로는 숫자가 작을수록 순위가 높게 생각함.
+문제점 :
+starvation : 낮은 순위의 프로세스가 영원히 cpu를 사용 못할수도 있음
+해결법:
+aging : 대기 시간이 흐를수록 우선순위가 점점 올라감.
+
+RR(Round Robin)
+현대 컴퓨터의 표준.
+각 프로세스는 동일한 크기의 할당 시간(time quantum)을 가짐.
+일반적으로는 10~100밀리초
+할당 시간이 끝나면 프로세스는 선점(preemptive)당하고 ready queue 의 제일 뒤로 가서 다시 줄을 선다.
+n개의 프로세스가 ready queue에 있고 할당시간이 q time unit 인 경우 각 프로세스는 최대 q time unit 단위로 cpu시간의 1/n을 갖는다.
+=> 어떤 프로세스도 (n-1)q time unit 이상을 기다리지 않는다.
+q 가 너무 크면 => FCFS
+q 가 너무 작으면 => context switch 오버헤드가 커져서 오히려 성능 저하
+일반적으로 SJF보다 average turnaround time(평균 소요 시간) 은 길지만 response time(응답 시간)은 더 짧다.
+장점 : 응답시간이 빠름.
+단점 : 프로세스 소요 시간이 전부 비슷하면 대기 시간이 길어질수 있음.

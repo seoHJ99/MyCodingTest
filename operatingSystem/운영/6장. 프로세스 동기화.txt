@@ -1,0 +1,94 @@
+프로세스 동기화
+데이터의 접근
+방식 : 저장소의 데이터 -> 읽어옴 -> 연산 -> 연산결과를 저장소에 저장
+저장소 : 메모리, 프로세스의 주소 공간
+연산 : cpu, 프로세스
+
+같은 저장소에 대해 여러 연산을 실행하는 경우 race conditon의 가능성이 있음.
+즉, 만약 하나의 연산이 완료되지 않았는데 다른 연산에서 해당 데이터를 처리하게 되면, 즉, 같은 데이터에 동시 접근하면 잘못된 값을 얻을수도 있음.
+cpu가 여러개일때 생길수 있음.
+공유 메모리를 사용하는 프로세스들, 커널 내부 데이터를 접근하는 루틴들 간 생길수 있음. 즉, 운영체제에게 시스템 콜을 했는데 다른 프로세스 역시 시스템콜을 한 경우, 같은 데이터에 접근해여 race condition이 생길수 있음. 또는 커널의 코드가 실행중인데 인터럽트가 들어오는 경우.
+
+os에서 race condition 은
+1. kernel 수행중 인터럽트가 발생 
+  - 커널의 데이터를 레지스터로 가져온 상태에서 인터럽트 발생. 레지스터에 있는 똑같은 데이터를 인터럽트 실행 코드에서 건듬. 이럴 경우 인터럽트가 처리한 내용과 레지스터의 데이터 내용이 달라서 문제가 발생.
+해결법 : 중요한 값을 처리하는 도중에는 인터럽트가 들어와도 무시하고 값 처리 작업이 끝나야지만 인터럽트 작업 실행.
+2.  process가 시스템콜을 하여 kernel mode로 수행중인데 context switch가 일어나는 경우
+  - a프로세스와 b프로세스가 존재. a가 특정 변수를 건드리는 도중에 멈추고 b에게 cpu가 넘어감. b역시 똑같은 변수를 건드림. 다시 a로 가더라도 a는 b가 수정하기 전의 값을 읽어들였기에 무넺 발생.
+해결법 : 프로세스가 커널모드에서 수행중일때는 cpu를 preempt하지 않음. 즉, 커널모드에 있을때는 반드시 작업 완료후 스위치.  커널에서 사용자 모드로 돌아갈때 preempt. 대신 약간의 cpu시간 오버가 일어나긴 함.
+3. cpu가 여러개인 환경
+해결법 : 방법 1. 한 cpu가 데이터에 접근할시 락을 걸어서 다른 cpu가 접근하지 못하게 함
+           방법 2. 어차피 문제는 커널. 데이터 개별적이 아닌 커널 전체에대한 락. 커널 내부에 있는 각 공유 데이터에 접근할때마다 그 데이터에 대한 lock/unlock하는 방법. 커널에 하나의 cpu만 접근하게 함. 비효율적.
+
+process synchroniation 문제
+공유 데이터의 동시접근은 데이터의 불일치 문제를 발생시킬수 있음.
+ 일관성을 유지하기 위해서는 협력 프로세스간의 실행순서를 정리해주는 메커니즘 필요
+race condition : 여러 프로세스들이 동시에 공유 데이터를 접근하는 상황.
+race condition을 막기 우해서는 동시 프로세스들이 동기화 되어야 한다.
+
+critical-section problem
+n개의 포ㅡ로세스가 공유 데이터를 동시에 사용하기를 원하는 경우
+각 프로세스는 code segment에는 공유데이터에 접근하는 코드인 critical section이 존재
+problem
+  하나의 프로세스가 critical section에 있을때 다른 모든 프로세스는 critical section에 들어갈수 없어야 한다.
+  즉, a프로세스가 크리티컬 섹션 내부에 있으면, b프로세스는 크리티컬 섹션에 접근 불가능 해야함.
+이를 해결하기 위해 만족해야할 조건
+1. mutual exclusion(상호 배제)
+   프로세스가 critical 섹션에 존재하면 다른 프로세스는 해당 critical section에 들어가면 안된다.
+2. progress( 진행)
+   아무도 critical section에 있지 않은데 누군가 들어가고자하면 들어갈수 있게 해야한다.
+3. bounded waiting(유한 대기)
+   프로세스가 크리티컬 섹션에 들어가려고 요청한 후부터 그 요청이 허용될때까지 다른 프로세스들이 크리티컬 섹션에 들어가지 못한다. 즉, a,b만 번갈아가면서 들어가고 c는 못들어가면 안된다.
+
+algorithm1
+
+do{
+    while (turn !=0); /* 내 차례*/
+    critical section
+    trun = 1;             /*이제 네 턴*/
+    remainder section    
+}while (1);
+만약 turn이 0이 아니면 내 차례가 아니기에 while문을 돌면서 기다림.
+본인 차례면 크리티컬 섹션에 들어갔다 나오고, turn을 1로 바꿔 상대방 차례로 바꿔준다.
+문제는 교대로 바뀜. progress를 충족 못함. 0이 크리티컬 섹션에 들어가지 않으면 1도 들어가지 못하는 문제
+
+algorithm2
+boolean flag[2];
+initially flag[모두] = false; 
+두개의 프로세스 모두 자신만의 플레그라는 변수를 가짐. 이것이 크리티컬 섹션에 들어가고자 하는 의중 표시
+do{
+   flag[i] = true;       /*pretend i am in*/
+   while (flag[j]);       /* is he also in? them wait*/
+   critical section     
+   flag[i] = false;       /* i am out now*/
+   remainder section
+}while (1);
+처음에는 플레그값 둘다 false임. 둘다 크리티컬 섹션에 안들어가고자 함.
+그리고 while문을 통해 상대방이 flag가 true인지, 즉 크리티컬 섹션에 들어가고자 하는지 체크. 만약 아니라면 크리티컬 섹션에 들어간 다음 나오면서 본인의 플레그를 false로 변경해서 상대방이 들어갈수 있게 해줌.
+문제 : a가 플레그를 true로 바꿈. 그리고 크리티컬 섹션 진입 안하고 cpu변경되서 b도 true로 바꿈. 이러면 둘다 크리티컬 안들어간 상태로 둘다 true여서 기다리기만 함. progress문제.
+
+algorithm3(피터슨의 알고리즘)
+do{
+   flag[i] = true;                         /*my intention is to enter ......*/
+   turn = j;                               /* set to his turn */
+   while (flag[j] && turn == j);       /* wait only if ....*/
+   critical section     
+   flag[i] = false;                        
+   remainder section
+}while (1);
+먼저 i가 들어가고자 하는 의사 표현. 그리고 상대방 턴으로 바꿈. 그러면 상대방이 크리티컬 섹션에 들어가고자 하면서 상대방 턴이면 대기, 아니면 크리티컬 섹션 진입. 이때 상대 턴이여도 상대가 들어가고자 하는 의도가 없으면 들어갈수 있는 장점이 존재.
+모두 만족.
+문제 : busy waiting (= spin lock) : 계속 cpu와 메모리를 쓰면서 wait함. while문 내부에서 대기하는 프로세스는 상대방을 기다리는 동안 cpu와 메모리를 낭비만 함.
+
+ test_and_set 인스트럭션.
+하드웨어적으로 test & modify를 atomic하게 수행할수 있도록 지원하는 경우 간단하게 해결 가능.
+읽음과 쓰기를 하나의 인스트럭션으로 수행 가능하다면, 동시에 읽고 쓰기가 가능하다면 간단하게 해결 가능. 하드웨어적인 문제.
+1. a를 읽어라. 2. b로 바꿔라. 이것을 1. a를 읽고 b로 바꿔라. 가 가능하면 됨.
+boolean lock = false;
+do{
+   while(test_and_set(lock));
+   critical section
+   lock = false;
+   remainder section
+}
+test_and_set 인터럭션이 실행되면서 크리티컬 섹션에 들어가기 전에 무조건 lock를 true로 바꿈. 이미 걸려져 있다면 다른 누군가 사용하는 중이므로 대기.
