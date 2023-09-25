@@ -1,0 +1,77 @@
+디스크 관리와 디스크 스케쥴링
+sector : 디스크의 내부의 최소 단위. 디스크 외부에서는 접근 불가. sector 0 은 최외곽 실린더의 첫 트랙에 있는 첫번째 트랙이며 부팅과 관련된 정보가 저장된다.
+logical block : 디스크 외부의 최소 단위. 주소를 가진 1차원 배열처럼 취급. 정보를 전송하는 최소 단위.
+physical formatting(low-level formatting) : 디스크를 컨트롤러가 읽고 쓸 수 있또록 섹터들로 나누는 과정.
+ 각 섹터는 header + 실제 data(보통 512bytes)+ trailer 로 구성.
+ header 와 trailer는 sector number, ECC(error-correcting code) 등의 정보가 저장되며 controller가 직접 접근 및 운영
+   ECC : error correcting code: 데이터를 작게 요약한 코드. 말하자면 512bytes짜리 데이터를 해쉬 함수같은 것을 저장하여 축약시킨 것. 데이터를 꺼내갈때 현 데이터에 해쉬 함수같은 것을 적용해서 같은지 확인, 배드 섹터가 났는지 검사하는 용도로 사용. ECC크기에 따라 오류 날시 수정까지 가능.
+ partitioning : 하나 이상의 실린더 그룹으로 나누느 과정. os는 이것을 독립적 disk로 취급.
+ logical formatting : 파일 시스템을 만드는 것. FAT, inod, free space 등의 구조 포함.
+ booting : ROM에 있는 small bootstrap loader의 실행. (ROM : 전원이 나가더라도 내용이 유지되는 메모리. 부팅을 위한 로더가 저장되어 있음)
+  sector 0 (boot block)를 load하여 실행.
+  sector 0 은 full bootstrap loader program
+  os를 디스크에서 load하여 실행.
+
+디스크 접근 시간(access time)
+seek time
+ 헤드를 해당 실린더로 움직이는데 걸리는 시간. 가장 오래 걸리는 시간.
+rotational latency
+ 헤드가 원하는 섹터에 도달하기까지 걸리는 회전 지연 시간.
+transfer time
+ 실제 데이터의 전송 시간. 가장 짧은 시간. 
+
+disk bandwidth : 단위 시간당 전송된 바이트의 수
+disk scheduling : seek time을 최소화하는 것이 목표
+
+디스크 스케쥴링 알고리즘
+FCFS(First Come First Service) 
+먼저 들어온 순서대로 처리함.
+단점 : 헤드 이동 거리가 커짐
+
+SSTF(Shortest Seek Time First)
+현재 헤드 위치에서 가장 가까운 위치에 있는 요청을 먼저 처리
+단점 : starvation이 발생할수 있음.
+
+SCAN
+엘리베이터 스케쥴링이라고도 불림. 현대의 스케쥴링의 기반이 됨.
+disk arm이 디스크의 한쪽 끝에서 다른 한쪽 끝으로 이동하며 가는 길목에 있는 모든 요청을 처리한다. 다른 한쪽 끝에 도달하면 역방향으로 이동하며 오는 길목에 있는 모든 요청을 처리한다.
+단점 : 실린더 위치에 따라 대기시간이 다르다.
+
+C-SCAN (Circular scan)
+SCAN과 똑같으나 돌아가면서 요청을 처리하지 않는다. 그냥 처음으로 돌아가서 다시 시작.
+SCAN보다 균일한 대기 시간을 제공.
+
+그 외 알고리즘들
+N-SCAN
+일단 arm이 한 방향으로 움직이기 시작하면, 움직이기 시작한 시점 이후에 들어온 요청은 무시하고 다음번에 처리함. 
+LOOK and C-LOOK
+ LOOK : scan과 같은 방식이나 진행 방향에 더이상 요청이 없으면 방향을 바꾸는 방식.
+ C-LOOK : c-scan과 같은 방식이나 진행 방향에 더이상 요청이 없으면 다시 처음으로 돌아가는 방식.
+
+알고리즘을 결정
+ file의 할당 방법에 따라 디스크 요청이 영향을 받는다는다. 
+ merge해서 여러 요청을 한번에 처리한다.
+ 디스크 스케줄링 알고리즘은 필요할 경우 다른 알고리즘으로 쉽게 교체될수 있도록 os와 별도의 모듈로 작성되는 것이 바람직함
+
+swap-space 관리
+disk를 사용하는 두가지 이유
+  memory의 휘발성 - > file system
+  프로그램의 실행을 위한 memory 공간 부족  -> swap space
+swap-space
+ virtual memory system에서는 디스크를 memory의 연장 공간으로 사용
+ 파일 시스템 내부에 둘 수도 있으나 별도 partition사용이 일반적
+   공간 효율성보다는  속도 효율성이 우선
+   일반 파일보다 훨씬 짧은 시간만 존재하고 자주 참조됨
+   따라서 block의 크기 및 저장 방식이 일반 파일 시스템과 다름
+
+RAID (Redundant array of independent disks)
+ 여러개의 디스크를 묶어서 사용
+사용 목적:
+ 디스크 처리 속도 향상
+   여러 디스크의 block의 내용을 분산 저장
+   병렬적으로 읽어 옴(interleaving, striping)
+ 신뢰성(reliability) 향상
+    동일 정보를 여러 디스크에 중복 저장
+    하나의 디스크가 고장시 다른 디스크에서 읽어옴.
+    단순한 중복 저장이 아니라 일부 디스크에 parity를 저장하야 공간의 효율성을 높일수 있다.
+    parity : ECC같은 일종의 축약 정보. 마지막 디스크에 일종의 해시 함수를 이용해서 축약된 정보를 중복 저장함. 방법에 따라 복원까지 가능.

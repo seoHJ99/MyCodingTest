@@ -1,0 +1,98 @@
+파일시스템 임플리멘테이션
+Contiguous Allocation
+연속된 메모리 주소에 파일을 저장하는 방식
+장점 : 빠른 I/O 속도. 한번의 seek/rotation으로 많은 양의 데이터를 받아올수 있음. 빨라서 realtime file 용으로, 또는 이미 run 중이던 process의 swapping 용으로 사용 가능. 직접 접근이 가능.
+단점 : 외부 조각이 생길수 있음. 파일 크기를 키우기가 어렵다. 미리 넉넉히 할당할시 내부 조각이 생길수 있음.
+
+Linked Allocation
+빈 위치에 무조건 데이터를 저장하고 다음 블록의 위치를 적어두는 방식.
+장점 : 외부조각이 발생하지 않는다.
+단점 : 직접접근이 불가능. 순차접근에 의한 시간이 오래거림. Reliability 문제 : 중간에 배드섹터가 발생하면 다음 블록의 pointer가 유실되어 많은 데이터가 소실되는 문제. pointer를 위한 공간이 block의 일부가 되어 공간 효율성이 떨어짐. (디스크의 저장 섹터는 512byte의 배수가 되는데 pointer는 4byte를 가짐. 512byte짜리 파일을 저장하면 2개의 블록이 필요함)
+
+Indexed Allocation
+블록 한곳에 파일의 저장된 블록 위치를 모두 저장해두는 방식.
+장점 : 직접접근이 가능. 외부 조각이 발생하지 않음.
+단점 : 인덱스를 위한 블럭 하나가 필요해서 작은 file의 경우 공간 낭비가 발생.
+        엄청 큰 파일은 하나의 블록에 전부 표현이 불가능함.
+        (해결법 : Linked scheme : 다른 블록에 이어서 저장하고, 블록 끝에 다른 블록의 pointer를 저장.
+                    multilevel index : 이단계 페이지 테이블처럼 인덱스 내부의 인덱스를 만듬)
+
+UNIX의 파일 시스템 구조
+partition(=Logical Disk) 
+  1. boot Block: 모든 os에서 0번에 존재. 부팅에 필요한 정보를 담고 있다.
+  2. Super Block: 파일 시스템에 관한 총체적인 정보를 담고 있다. I-node List의 위치와 길이도 담고 있다.
+  3. Indode List: Inode로 이뤄진 리스트. Inode는 파일 하나당 하나씩 존재하며, 파일의 이름을 제외한 모든 메타데이터를 담고 있다.
+                    큰 파일의 위치를 표현하기 위해 direct blocks, single indirect, double indirect, triple indirect로 위치 정보를 담고 있다.
+                    작은 파일은 direct blocks에 바로 위치 정보를 담고 있고, indirect들은 위치 정보를 담고 있는 베열의 위치를 담고 있다.
+                    더블, 트리플은 이단계 인덱스 구조, 트리플은 삼단계 인덱스 구조로 내부의 인덱스가 또 다른 인덱스를 가리키고 있어 이를 다 따라가야만 위치 정보를 확인할수 있다.
+  4. Data Block: 파일의 실제 내용과 파일의 이름을 보관한다.
+장점 :                     큰 파일의 위치를 적은 용량으로도 표현 가능한 효율적인 방법.
+
+File-allocation table(FAT) 파일 시스템
+  1. Boot Block
+  2. FAT : 파일의 메타 데이터 중 위치정보만 따로 저장하고 있다. data block 의 block크기만큼의 배열로 이뤄지며, 인덱스 번호의 블럭 다음 블럭 위치를 담고 있다. 그러다 파일이 끝나면 약속된 번호가 나온다. reliability 문제를 피하기 위해 카피를 디스크에 저장하고 있다. 
+  3. Root Directory : 
+  4. Data block : 파일의 이름을 비롯한 모든 파일의 메타데이터가 이곳에 담긴다. 파일의 시작 위치까지도. 다음 블록의 위치는 FAT에 담김
+장점 : 실제 block이 아닌 FAT만 확인하면 되기에 직접 접근이 가능. Linked Allocation의 문제를 모두 극복한 형태
+
+Free-Space management
+빈 공간 관리.
+Bit map or Bit vector
+ 하나당 1비트의 크기를 가지는 디스크 크기만큼의 배열을 만들어서 해당 블록이 중인지 아닌지 표시. 연속적인 n개의 free block를 찾는데 효과적. 부가적인 공간이 필요하긴 하나 그리 크진 않음.
+Linked list
+ 비어있는 블록들을 linked list방식으로 포인터로 다음 빈 블록을 가르키는 방식. 추가적인 공간낭비가 없으나 연속적인 빈 공간을 찾기는 힘들다.
+Grouping
+ linked list방법의 변형. 첫번째 free block이 인덱스 역할을 해서 n개의 pointer를 가짐. 이것들이 빈 블록을 가르키고 마지막 pointer는 또 다른 블록을 가리키고, 그 블록은 똑같이 인덱스를 지님
+Counting
+ 프로그램들이 종종 여러개의 연속적인 block를 할당하고 반납한다는 성질에서 착안. 첫번째 빈블럭과 연속된 빈블럭의 개수를 쌍으로 관리.
+
+Directory Implementation
+Linear list
+  directory file을 파일 이름, 메타 데이터를 쌍으로 순차적으로 저장. 모두 일정한 크기를 가짐. 구현이 간단하고 디렉토리 내에 파일이 있는지 찾기 위해서는 linear search가 필요해 시간이 느림.
+Hash Table
+  linear list + hashing
+  hash table 은 file name을 이 파일의 linear list의 위치로 바꾸어줌.
+  search time을 없앰.
+  collision발생 가능.
+  검색 속도는 빠름. 파일 이름에 해쉬 함수를 적용하여 나온 값의 위치만 조회하면 되기 때문에.
+
+
+file의 metadata의 보관 위치
+1. 디렉토리 내에 직접 보관
+2. 디렉토리에는 포인터를 두고 다른 곳에 보관. inode, FAT등
+
+long file name의 지원
+<file name, metadata> 의 list에서 각 entry는 일반적으로 고정 크기.
+file name이 고정 크기의 entry길이보다 길어지는 경우, entry의 마지막 부분에 이름의 뒷부분이 위치한 곳의 포인터를 두는 방법
+이름의 나머지 부분은 동일한 directory file의 일부에 존재
+
+VFS 와 NFS
+Virtual file system
+서로 다른 다양한 file system에 대해 동일한 시스템 콜 인터페이스(API)를 통해 접근할 수 있게 해주는 os의 계층(layer)
+Networek file system
+분산 시스템에서는 네트워크를 통해 파일이 공유될수 있기에 이를 위한 대표적인 파일 공유 방법. 
+
+Page cache 와 Buffer cache
+page cache
+ 가상 메모리의 페이징 ㅅ시ㅡ템에서 사용하는 페이지 프레임을 caching의 관점에서 설명하는 용어. memory-mapped i/o를 쓰는 경우 file의  i/o에서도 page cache사용
+memory-mapped i/o
+ file의 일부를 virtual memory에 mapping시킴
+ 매핑시킨 영역에 대한 메모리 접근 연산은 파일의 입출력을 수행하게 함.
+ 즉, 직접적으로 disk에 i/o하는 것이 아닌 메모리에 올려진 disk의 데이터에 접근하는 것. os의 도움이 없이 읽고 쓸수 있음.
+ 메모리에서 쫓겨날때는 swap area가 아닌 파일에 직접 수정된 내용을 쓰고 나감.
+ 동일한 프로세스가 여러개 열리면 메모리에 올라간 프로세스의 데이터가 공유되어 쓰임.
+ 메모리에 올라온 파일은 시스템콜을 안해도 접근 가능해서 빠르게 접근 가능.
+ 페이지 캐시에 올라온 내용을 다시 버퍼 캐시로 카피하는 과정이 없이 그대로 사용하면 되기에 빠르다.
+ 그러나 여러 프로세스가 공유해서 사용 가능하기에 일관성 문제가 생길수 있다.
+buffer cache
+ 파일 시스템을 통한 i/o연산은 메모리의 특정 영역인 buffer cache사용
+ file 사용의 locality활용. 한번 읽어온 block에 대한 후속 요청시 buffer cache에서 즉시 전달.
+ 모든 프로세스가 공용으로 사용.
+ replacement algorithm 필요(LRU, LFU등)
+unified buffer cache
+ 최근의 os에서 기존의 buffer cache가 page cache에 통합됨. 본래 buffer cache 도 disk의 block크기와 같은 512byte단위로 관리했으나 속도 효율성을 위해 페이지와 크기가 같은 4kb 단위로 관리하게 바뀜.
+ memory-mapped i/o에서 사용하면 버퍼 캐시가 곧 페이지 캐시가 된다.
+ 
+memory-mapped i/o VS read-write I/O
+차이 : memory mapped 는 메모리에 프로세스의 내용물을 직접 올리는 방식. read-write는 필요할때마다 i/o해서 올리고 내리는 방식.
+        memory mapped는 일관성 문제가 생길수 있지만, read-write는 버퍼 캐시에 올라온 원본을 카피해서 사용하는 방식이기에 일관성 걱정은 없다.
