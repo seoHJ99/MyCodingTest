@@ -73,7 +73,7 @@ class DoublyLinkedList{
         }else if(index == this.count){ // 뒤쪽에 삽입하는 경우 
             newNode.next = null;
             newNode.prev = this.tail;
-            this.tail.newNode = newNode;
+            this.tail.next = newNode;
         }else{ // 그 외의 위치에 삽입하는 경우
             let currentNode = this.head;  
             for(let i =0; i<index - 1; i++){
