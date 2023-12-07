@@ -24,7 +24,7 @@ group = 'hello'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '8'
+	sourceCompatibility = '17'
 }
 
 configurations {
