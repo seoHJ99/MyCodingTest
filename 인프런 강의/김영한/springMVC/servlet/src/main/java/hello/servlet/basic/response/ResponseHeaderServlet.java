@@ -13,7 +13,7 @@ import java.io.PrintWriter;
 public class ResponseHeaderServlet extends HttpServlet {
 
     @Override
-    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //[status-line]
         response.setStatus(HttpServletResponse.SC_OK);
 

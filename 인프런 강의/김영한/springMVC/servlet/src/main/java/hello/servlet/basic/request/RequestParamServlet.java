@@ -18,7 +18,6 @@ public class RequestParamServlet extends HttpServlet {
         System.out.println("RequestParamServlet.service");
 
         System.out.println("[전체 파라미터 조회] - start");
-        
         request.getParameterNames().asIterator()
                         .forEachRemaining(paramName -> System.out.println(paramName + " = " + request.getParameter(paramName)));
         request.getParameterNames();
@@ -38,7 +37,6 @@ public class RequestParamServlet extends HttpServlet {
         for(String name : usernames){
             System.out.println("username = " + name);
         }
-
         response.getWriter().write("ok");
     }
 }
