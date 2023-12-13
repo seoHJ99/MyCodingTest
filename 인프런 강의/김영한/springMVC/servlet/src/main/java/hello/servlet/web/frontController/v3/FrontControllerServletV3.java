@@ -1,5 +1,6 @@
 package hello.servlet.web.frontController.v3;
 
+import hello.servlet.web.frontController.ModelView;
 import hello.servlet.web.frontController.MyView;
 import hello.servlet.web.frontController.v2.ControllerV2;
 import hello.servlet.web.frontController.v2.controller.MemberFormControllerV2;
@@ -31,20 +32,32 @@ public class FrontControllerServletV3 extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         String requestURI = request.getRequestURI();
 
         ControllerV3 controller = controllerMap.get(requestURI);
-        if(controller == null){
+        if (controller == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
+
+        Map<String, String> paramMap = createParamMap(request);
+        ModelView mv = controller.process(paramMap);
+
+        String viewName = mv.getViewName();// 논리이름 new-form
+        MyView view = viewResolver(viewName);
+
+        view.render(mv.getModel(), request, response);
+    }
+
+    private static MyView viewResolver(String viewName) {
+        return new MyView("/WEB-INF/views/" + viewName + ".jsp");
+    }
+
+    private static Map<String, String> createParamMap(HttpServletRequest request) {
         // parmaMap
         Map<String, String> paramMap = new HashMap<>();
         request.getParameterNames().asIterator()
                 .forEachRemaining(paramName -> paramMap.put(paramName, request.getParameter(paramName)));
-
-        MyView view = controller.process(request, response);
-        view.render(request, response);
+        return paramMap;
     }
 }
