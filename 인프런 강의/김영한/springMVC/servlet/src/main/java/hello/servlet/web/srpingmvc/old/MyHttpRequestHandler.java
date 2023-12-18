@@ -1,4 +1,4 @@
-package hello.servlet.web.srpingmvc;
+package hello.servlet.web.srpingmvc.old;
 
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Component;

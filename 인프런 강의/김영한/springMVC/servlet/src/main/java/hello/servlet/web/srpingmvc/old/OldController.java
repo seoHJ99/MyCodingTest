@@ -1,4 +1,4 @@
-package hello.servlet.web.srpingmvc;
+package hello.servlet.web.srpingmvc.old;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
