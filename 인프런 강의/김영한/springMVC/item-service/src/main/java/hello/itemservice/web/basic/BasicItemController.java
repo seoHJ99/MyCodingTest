@@ -78,7 +78,7 @@ public class BasicItemController {
         return "basic/item";
     }
 
-    @PostMapping("/add")
+//    @PostMapping("/add")
     public String addItemV4( Item item){
         // 어노테이션 생략시 객체는 자동적으로 @ModelAttribute,
         // 기본형은 자동적으로 @RequestParam
@@ -86,6 +86,12 @@ public class BasicItemController {
         itemRepository.save(item);
 
         return "basic/item";
+    }
+
+    @PostMapping("/add")
+    public String addItemV5( Item item){
+        itemRepository.save(item);
+        return "redirect:/basic/items/"+item.getId();
     }
 
     @GetMapping("/{itemId}/edit")
@@ -98,8 +104,7 @@ public class BasicItemController {
     @PostMapping("/{itemId}/edit")
     public String edit(@PathVariable Long itemId, @ModelAttribute Item item){
         itemRepository.update(itemId, item);
-        return "redirect:/basic/items/{itemId}";
-        // http 상태 코드 역시 바뀜.
+        return "redirect:/basic/items/{itemId}"; // http 상태 코드 역시 바뀜.
     }
 
 
@@ -111,5 +116,4 @@ public class BasicItemController {
         itemRepository.save(new Item("itemA", 10000, 10));
         itemRepository.save(new Item("itemB", 20000, 20));
     }
-
 }
