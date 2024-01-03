@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -27,10 +28,18 @@ public class BasicItemController {
         return "basic/items";
     }
 
+    @GetMapping("/{itemId}")
+    public String item(@PathVariable long itemId, Model model){
+        Item item = itemRepository.findById(itemId);
+        model.addAttribute("item", item);
+        return "basic/item";
+    }
+
+
     /**
      * 테스트용 데이터 추가
      */
-    @PostConstruct
+    @PostConstruct // 의존 주입이 이뤄진 이후에 코드가 동작되는걸 보장함. 단 한번만 실행됨.
     public void init(){
         itemRepository.save(new Item("itemA", 10000, 10));
         itemRepository.save(new Item("itemB", 20000, 20));
