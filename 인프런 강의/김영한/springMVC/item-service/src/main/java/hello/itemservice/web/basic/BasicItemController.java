@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,9 +37,55 @@ public class BasicItemController {
         return "basic/addForm";
     }
 
+//    @PostMapping("/add")
+    public String addItemV1(
+            @RequestParam String itemName,
+            @RequestParam int price,
+            @RequestParam Integer quantity,
+            Model model){
+
+        Item item = new Item();
+        item.setItemName(itemName);
+        item.setPrice(price);
+        item.setQuantity(quantity);
+
+        itemRepository.save(item);
+
+        model.addAttribute("item", item);
+
+        return "basic/item";
+    }
+
+//    @PostMapping("/add")
+    public String addItemV2(@ModelAttribute("item") Item item, Model model){
+
+        itemRepository.save(item);
+
+//        model.addAttribute("item", item);
+        // @ModelAttribute 의 name "item"은 저절로  model.addAttribute("item", item);
+        // 의 코드를 추가해주는 역할
+
+        return "basic/item";
+    }
+
+//    @PostMapping("/add")
+    public String addItemV3(@ModelAttribute Item item){
+
+        // 클래스명 Item의 첫글자만 소문자로 바꿔 model에 담음
+        // Item -> item
+        itemRepository.save(item);
+
+        return "basic/item";
+    }
+
     @PostMapping("/add")
-    public String save(){
-        return "basic/addForm";
+    public String addItemV4( Item item){
+        // 어노테이션 생략시 객체는 자동적으로 @ModelAttribute,
+        // 기본형은 자동적으로 @RequestParam
+
+        itemRepository.save(item);
+
+        return "basic/item";
     }
 
 
