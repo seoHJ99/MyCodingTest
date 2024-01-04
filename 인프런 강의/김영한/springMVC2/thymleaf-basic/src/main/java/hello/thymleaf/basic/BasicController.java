@@ -1,6 +1,8 @@
 package hello.thymleaf.basic;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.Data;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,5 +28,43 @@ public class BasicController {
         model.addAttribute("data", "Hello <b>Spring!<b>");
         return "basic/text-unescape";
     }
-    
+
+    @GetMapping("/variable")
+    public String variable(Model model){
+        User userA = new User("userA", 10);
+        User userB = new User("userB", 20);
+
+        List<User> list = new ArrayList<>();
+        list.add(userA);
+        list.add(userB);
+
+        Map<String, User> map = new HashMap<>();
+        map.put("userA", userA);
+        map.put("userB", userB);
+
+        model.addAttribute("user", userA);
+        model.addAttribute("users", list);
+        model.addAttribute("userMap", map);
+
+        return "basic/variable";
+    }
+
+    @GetMapping("/basic-objects")
+    public String basicObjects(HttpSession session){
+        session.setAttribute("sessionData", "Hello Session");
+        return "basic/basic-objects";
+    }
+
+
+
+    @Data
+    static class User{
+        private String username;
+        private int age;
+
+        public User(String username, int age) {
+            this.username = username;
+            this.age = age;
+        }
+    }
 }
