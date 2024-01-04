@@ -1,5 +1,7 @@
 package hello.thymleaf.basic;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.Data;
 import org.springframework.stereotype.Component;
@@ -8,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,9 +53,21 @@ public class BasicController {
     }
 
     @GetMapping("/basic-objects")
-    public String basicObjects(HttpSession session){
+    public String basicObjects(Model model, HttpServletRequest request,
+                               HttpServletResponse response, HttpSession session) {
         session.setAttribute("sessionData", "Hello Session");
+        model.addAttribute("request", request);
+        model.addAttribute("response", response);
+        model.addAttribute("servletContext", request.getServletContext());
         return "basic/basic-objects";
+    }
+
+
+    @Component
+    static class HelloBean{
+        public String helllo(String data){
+            return "Hello " + data;
+        }
     }
 
 
