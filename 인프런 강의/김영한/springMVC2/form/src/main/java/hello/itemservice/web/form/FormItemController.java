@@ -9,7 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -18,6 +20,15 @@ import java.util.List;
 public class FormItemController {
 
     private final ItemRepository itemRepository;
+
+    @ModelAttribute("regions") // model.addAttribute 가 호출될때 자동으로 regions 라는 이름으로 model에 담김
+    public Map<String, String> regions(){
+        Map<String, String> regions = new LinkedHashMap<>();
+        regions.put("SEOUL", "서울");
+        regions.put("BUSAN", "부산");
+        regions.put("JEJU", "제주");
+        return regions;
+    }
 
     @GetMapping
     public String items(Model model) {
@@ -36,6 +47,7 @@ public class FormItemController {
     @GetMapping("/add")
     public String addForm(Model model) {
         model.addAttribute("item", new Item());
+
         return "form/addForm";
     }
 
@@ -45,6 +57,7 @@ public class FormItemController {
         log.info("itemOpen = {}", item.getOpen());
         // on 이라는 문자열이 넘어오지만 스프링에서 boolean 타입이기에 true로 변경해줌
         // 그러나 체크를 안할때는 아예 값이 안넘어와서 null 이 들어옴.
+        log.info("itemRegions = {}", item.getRegions());
 
         Item savedItem = itemRepository.save(item);
         redirectAttributes.addAttribute("itemId", savedItem.getId());
