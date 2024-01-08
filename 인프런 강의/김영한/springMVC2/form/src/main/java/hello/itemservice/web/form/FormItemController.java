@@ -2,6 +2,7 @@ package hello.itemservice.web.form;
 
 import hello.itemservice.domain.item.Item;
 import hello.itemservice.domain.item.ItemRepository;
+import hello.itemservice.domain.item.ItemType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,11 @@ public class FormItemController {
         regions.put("BUSAN", "부산");
         regions.put("JEJU", "제주");
         return regions;
+    }
+
+    @ModelAttribute("itemTypes")
+    public ItemType[] itemTypes(){
+        return ItemType.values();
     }
 
     @GetMapping
@@ -58,6 +64,7 @@ public class FormItemController {
         // on 이라는 문자열이 넘어오지만 스프링에서 boolean 타입이기에 true로 변경해줌
         // 그러나 체크를 안할때는 아예 값이 안넘어와서 null 이 들어옴.
         log.info("itemRegions = {}", item.getRegions());
+        log.info("itemItemType = {}", item.getItemType());
 
         Item savedItem = itemRepository.save(item);
         redirectAttributes.addAttribute("itemId", savedItem.getId());
