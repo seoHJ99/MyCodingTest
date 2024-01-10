@@ -85,7 +85,7 @@ public class ValidationItemControllerV2 {
     }
 
 //    @PostMapping("/add")
-  /*  public String addItemV2(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String addItemV2(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         // 검증 로직
         if(!StringUtils.hasText(item.getItemName())){
@@ -119,7 +119,7 @@ public class ValidationItemControllerV2 {
         redirectAttributes.addAttribute("itemId", savedItem.getId());
         redirectAttributes.addAttribute("status", true);
         return "redirect:/validation/v2/items/{itemId}";
-    }*/
+    }
 
 //    @PostMapping("/add")
     public String addItemV3(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
