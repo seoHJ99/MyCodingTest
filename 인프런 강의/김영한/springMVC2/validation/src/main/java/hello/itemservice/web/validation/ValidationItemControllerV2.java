@@ -169,6 +169,7 @@ public class ValidationItemControllerV2 {
         // 검증 로직
         if(!StringUtils.hasText(item.getItemName())){
             bindingResult.rejectValue("itemName", "required");
+//            더 구체적인 것을 먼저 찾고(자신의 객체명 + 필드명이 포함된 메시지가 있는지), 없으면 범용적인 것, 더 심플한 메시지를 적용.
         }
         if(item.getPrice() == null || item.getPrice() < 1000 || item.getPrice()> 1_000_000){
             bindingResult.rejectValue("price", "range", new Object[]{1000, 1000000}, null);
