@@ -19,7 +19,6 @@ public class ItemValidator implements Validator {
     public void validate(Object target, Errors errors) {
         Item item = (Item) target;
 
-
 //        ValidationUtils.rejectIfEmpty(bindingResult, "itemName", "required");
 
         // 검증 로직
