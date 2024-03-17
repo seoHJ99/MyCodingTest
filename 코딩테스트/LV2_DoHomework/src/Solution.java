@@ -8,7 +8,7 @@ class Solution implements Comparator {
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        String[][] plans = {{"science", "12:40", "50"}, {"music", "12:20", "40"}, {"history", "14:00", "30"}, {"computer", "12:30", "100"}};
+        String[][] plans = {{"a", "09:00", "30"}, {"b", "09:20", "10"}, {"c", "09:40", "10"}};
         solution.solution(plans);
     }
 
@@ -37,26 +37,31 @@ class Solution implements Comparator {
                     Duration leftBetweenTime = betweenTime.minus(workingTime);
                     answer.add(planList.get(i).get(0));
                     while (stopSign == false) {
-                        if(!stop.isEmpty()) {
+                        if (!stop.isEmpty()) {
                             List stopWorking = stop.pop();
                             Duration leftWorkingTime = (Duration) stopWorking.get(1);
                             Duration leftTime = leftWorkingTime.minus(leftBetweenTime);
                             if (!leftTime.isNegative()) {
-                                stopWorking.set(1, leftTime.abs());
-                                stop.push(stopWorking);
+                                if(leftTime.isZero()){
+                                    answer.add(stopWorking.get(0).toString());
+                                }else {
+                                    stopWorking.set(1, leftTime.abs());
+                                    stop.push(stopWorking);
+                                }
+
                                 stopSign = true;
                             } else {
                                 answer.add(stopWorking.get(0).toString());
                             }
-                        } else if(stop.isEmpty()){
+                        } else if (stop.isEmpty()) {
                             stopSign = true;
                         }
                     }
                 }
             } else {
                 answer.add(planList.get(i).get(0));
-                while (true){
-                    if(stop.isEmpty()){
+                while (true) {
+                    if (stop.isEmpty()) {
                         break;
                     }
                     List pop = stop.pop();
