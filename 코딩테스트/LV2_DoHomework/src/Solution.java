@@ -8,7 +8,7 @@ class Solution implements Comparator {
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        String[][] plans = {{"a", "09:00", "30"}, {"b", "09:20", "10"}, {"c", "09:40", "10"}};
+        String[][] plans = {{"a", "00:00", "20"}, {"b", "00:10", "50000"}, {"c", "00:30", "5"}, {"d", "00:50", "30"}};
         solution.solution(plans);
     }
 
