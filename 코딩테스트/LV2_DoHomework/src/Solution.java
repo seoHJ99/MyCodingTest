@@ -8,7 +8,7 @@ class Solution implements Comparator {
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        String[][] plans = {{"a", "00:00", "20"}, {"b", "00:10", "50000"}, {"c", "23:30", "5"}, {"d", "00:50", "30"}};
+        String[][] plans = {{"1", "00:00", "30"}, {"2", "00:10", "40"}, {"3", "00:20", "10"}, {"4", "00:25", "10"}, {"5", "01:10", "10"}};
         solution.solution(plans);
     }
 
@@ -16,12 +16,21 @@ class Solution implements Comparator {
         List<String> answer = new ArrayList<>();
         List<List<String>> planList = new ArrayList<>(Arrays.stream(plans).map(element -> Arrays.stream(element).collect(Collectors.toList())).collect(Collectors.toList()));
         Stack<List> stop = new Stack<>();
-        planList.sort(new Solution());
+        Collections.sort(planList, new Solution());
+
+        for (List<String> a : planList) {
+            System.out.println(a.get(0));
+        }
+        System.out.println("--------");
+
+
+
         for (int i = 0; i < planList.size(); i++) {
             if (i < planList.size() - 1) {
                 LocalTime nowWorkStartTime = LocalTime.parse(planList.get(i).get(1));
                 LocalTime nextWorkStartTime = LocalTime.parse(planList.get(i + 1).get(1));
                 Duration betweenTime = Duration.between(nowWorkStartTime, nextWorkStartTime);
+                Duration freeTime = betweenTime;
                 Duration workingTime = Duration.of(Long.parseLong(planList.get(i).get(2)), ChronoUnit.MINUTES);
                 int canDoWork = betweenTime.compareTo(workingTime);
 
@@ -29,29 +38,41 @@ class Solution implements Comparator {
                     List work = new ArrayList<>();
                     work.add(planList.get(i).get(0));
                     work.add(workingTime.minus(betweenTime));
+                    freeTime = freeTime.minus(workingTime.minus(betweenTime));
                     stop.push(work);
                 } else if (canDoWork == 0) {
+                    freeTime=freeTime.minus(workingTime);
                     answer.add(planList.get(i).get(0));
                 } else {
                     boolean stopSign = false;
                     Duration leftBetweenTime = betweenTime.minus(workingTime);
                     answer.add(planList.get(i).get(0));
                     while (stopSign == false) {
+                        if(freeTime.isZero()){
+                            break;
+                        }
                         if (!stop.isEmpty()) {
                             List stopWorking = stop.pop();
                             Duration leftWorkingTime = (Duration) stopWorking.get(1);
                             Duration leftTime = leftWorkingTime.minus(leftBetweenTime);
                             if (!leftTime.isNegative()) {
-                                if(leftTime.isZero()){
+                               freeTime= freeTime.minus(leftWorkingTime);
+                                if (leftTime.isZero()) {
                                     answer.add(stopWorking.get(0).toString());
-                                }else {
+                                } else {
                                     stopWorking.set(1, leftTime.abs());
                                     stop.push(stopWorking);
                                 }
 
                                 stopSign = true;
                             } else {
-                                answer.add(stopWorking.get(0).toString());
+                                freeTime=freeTime.minus(leftWorkingTime);
+                                if(freeTime.isNegative()){
+                                    stopWorking.set(1,leftBetweenTime.minus(freeTime));
+                                    stop.push(stopWorking);
+                                }else {
+                                    answer.add(stopWorking.get(0).toString());
+                                }
                             }
                         } else if (stop.isEmpty()) {
                             stopSign = true;
@@ -88,6 +109,4 @@ class Solution implements Comparator {
             return 1;
         }
     }
-
-
 }
