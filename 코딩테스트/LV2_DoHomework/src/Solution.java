@@ -8,7 +8,8 @@ class Solution implements Comparator {
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        String[][] plans = {{"1", "00:00", "30"}, {"2", "00:10", "40"}, {"3", "00:20", "10"}, {"4", "00:25", "10"}, {"5", "01:10", "10"}};
+        String[][] plans = {{"0", "00:00", "10"}, {"1", "00:05", "10"}, {"2", "00:10", "40"}, {"3", "00:20", "10"},
+                {"4", "00:25", "10"}, {"5", "01:10", "5"}, {"6", "01:30", "10"}};
         solution.solution(plans);
     }
 
@@ -18,19 +19,11 @@ class Solution implements Comparator {
         Stack<List> stop = new Stack<>();
         Collections.sort(planList, new Solution());
 
-        for (List<String> a : planList) {
-            System.out.println(a.get(0));
-        }
-        System.out.println("--------");
-
-
-
         for (int i = 0; i < planList.size(); i++) {
             if (i < planList.size() - 1) {
                 LocalTime nowWorkStartTime = LocalTime.parse(planList.get(i).get(1));
                 LocalTime nextWorkStartTime = LocalTime.parse(planList.get(i + 1).get(1));
                 Duration betweenTime = Duration.between(nowWorkStartTime, nextWorkStartTime);
-                Duration freeTime = betweenTime;
                 Duration workingTime = Duration.of(Long.parseLong(planList.get(i).get(2)), ChronoUnit.MINUTES);
                 int canDoWork = betweenTime.compareTo(workingTime);
 
@@ -38,14 +31,14 @@ class Solution implements Comparator {
                     List work = new ArrayList<>();
                     work.add(planList.get(i).get(0));
                     work.add(workingTime.minus(betweenTime));
-                    freeTime = freeTime.minus(workingTime.minus(betweenTime));
                     stop.push(work);
                 } else if (canDoWork == 0) {
-                    freeTime=freeTime.minus(workingTime);
                     answer.add(planList.get(i).get(0));
                 } else {
                     boolean stopSign = false;
                     Duration leftBetweenTime = betweenTime.minus(workingTime);
+                    Duration freeTime = leftBetweenTime;
+
                     answer.add(planList.get(i).get(0));
                     while (stopSign == false) {
                         if(freeTime.isZero()){
@@ -56,14 +49,13 @@ class Solution implements Comparator {
                             Duration leftWorkingTime = (Duration) stopWorking.get(1);
                             Duration leftTime = leftWorkingTime.minus(leftBetweenTime);
                             if (!leftTime.isNegative()) {
-                               freeTime= freeTime.minus(leftWorkingTime);
+                                freeTime= freeTime.minus(leftWorkingTime);
                                 if (leftTime.isZero()) {
                                     answer.add(stopWorking.get(0).toString());
                                 } else {
                                     stopWorking.set(1, leftTime.abs());
                                     stop.push(stopWorking);
                                 }
-
                                 stopSign = true;
                             } else {
                                 freeTime=freeTime.minus(leftWorkingTime);
@@ -71,6 +63,7 @@ class Solution implements Comparator {
                                     stopWorking.set(1,leftBetweenTime.minus(freeTime));
                                     stop.push(stopWorking);
                                 }else {
+                                    stopWorking.set(1,leftBetweenTime.minus(freeTime));
                                     answer.add(stopWorking.get(0).toString());
                                 }
                             }
