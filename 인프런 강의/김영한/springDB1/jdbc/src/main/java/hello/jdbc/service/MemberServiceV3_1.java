@@ -46,16 +46,6 @@ public class MemberServiceV3_1 {
         memberRepository.update(toId, toMember.getMoney() + money);
     }
 
-    private void release(Connection con) {
-        if (con != null) {
-            try {
-                con.setAutoCommit(true); // 커넥션 풀로 반환될 것을 고려해서 다시 변경
-                con.close();
-            } catch (Exception e) {
-                log.info("error", e);
-            }
-        }
-    }
 
     private void validation(Member toMember) {
         if (toMember.getMemberId().equals("ex")) {
