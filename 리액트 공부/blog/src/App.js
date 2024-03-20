@@ -13,13 +13,6 @@ function App() {
   ]);
   let [좋아요, 좋아요변경] = useState(0);
 
-  // state 상태의 array 를 변경할때는 복사본을 만들어서 복사본을 수정하기.
-  // state 변경 함수는 기존 state와 변경하려는 데이터가 같으면 변경x
-  // 따라서 array 의 copy본은 메모리 주소가 같기에 바뀌지 않음
-  // 만약 array의 내부 데이터를 복사하고 싶으면 [...배열 이름] 과 같은 식으로 사용해야함
-  // [...]은 아예 새로운 메모리 주소에 데이터를 할당하는 방식
-  // 안그러면 원본 데이터마저 손상됨
-
   return (
     <div className="App">
       <div className="black-nav">
@@ -29,7 +22,8 @@ function App() {
       <div className="list">
         <button
           onClick={() => {
-            let copy = [...글제목.sort()];
+            let copy = [...글제목];
+            copy.sort();
             글제목변경(copy);
           }}
         >
@@ -65,6 +59,30 @@ function App() {
         <h4>{글제목[2]}</h4>
         <p>발행 날짜</p>
       </div>
+      <Modal></Modal>
+    </div>
+    // 병렬적으로 태그를 쓰고 싶으면
+    // <></> 로 감싸면 됨
+  );
+}
+
+// 컴포넌트
+// html 을 조각화 시킴
+// 1. 반복적으로 자주 등장하거나
+// 2. 큰 하나의 페이지
+// 3. 자주 변경되는 것들
+// 컴포넌트를 남발하면 안됨
+
+const Modal2 = () => {};
+// 이런 방식으로 함수를 만들면 함수를 수정할수 없어서
+// 실수로 수정했을시 오류가 터진다는 이점
+
+function Modal() {
+  return (
+    <div className="modal">
+      <h4>제목</h4>
+      <p>날짜</p>
+      <p>상세내용</p>
     </div>
   );
 }
