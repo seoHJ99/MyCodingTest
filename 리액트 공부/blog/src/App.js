@@ -13,6 +13,7 @@ function App() {
   ]);
   let [좋아요, 좋아요변경] = useState([0, 0, 0]);
   let [modal, setModal] = useState(false);
+  let [글제목인덱스, setIndex] = useState(0);
 
   return (
     <div className="App">
@@ -83,6 +84,7 @@ function App() {
               <h4
                 onClick={() => {
                   setModal(!modal);
+                  setIndex(i);
                 }}
               >
                 {a}
@@ -103,8 +105,13 @@ function App() {
           );
         })
       }
-
-      {modal ? <Modal 글제목={글제목} 글제목변경={글제목변경}></Modal> : null}
+      {modal ? (
+        <Modal
+          글제목={글제목}
+          글제목변경={글제목변경}
+          글제목인덱스={글제목인덱스}
+        ></Modal>
+      ) : null}
     </div>
   );
 }
@@ -112,18 +119,9 @@ function App() {
 function Modal(props) {
   return (
     <div className="modal">
-      <h4>{props.글제목[0]}</h4>
+      <h4>{props.글제목[props.글제목인덱스]}</h4>
       <p>날짜</p>
       <p>상세내용</p>
-      <button
-        onClick={() => {
-          let copy = [...props.글제목];
-          copy[0] = "여자 코트 추천";
-          props.글제목변경(copy);
-        }}
-      >
-        글 수정
-      </button>
     </div>
   );
 }
