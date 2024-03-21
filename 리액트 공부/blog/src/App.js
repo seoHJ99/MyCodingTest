@@ -11,7 +11,7 @@ function App() {
     "글제목 2",
     "글제목 3",
   ]);
-  let [좋아요, 좋아요변경] = useState(0);
+  let [좋아요, 좋아요변경] = useState([0, 0, 0]);
   let [modal, setModal] = useState(false);
 
   return (
@@ -19,16 +19,25 @@ function App() {
       <div className="black-nav">
         <h4>블로그</h4>
       </div>
-      <div className="list">
-        <button
-          onClick={() => {
-            let copy = [...글제목];
-            copy.sort();
-            글제목변경(copy);
-          }}
-        >
-          가나다순정렬
-        </button>
+      <button
+        onClick={() => {
+          let copy = [...글제목];
+          copy.sort();
+          글제목변경(copy);
+        }}
+      >
+        가나다순정렬
+      </button>
+      <button
+        onClick={() => {
+          let copy = [...글제목];
+          copy[0] = "여자 코트 추천";
+          글제목변경(copy);
+        }}
+      >
+        이름 변경
+      </button>
+      {/* <div className="list">
         <h4>
           {글제목[0]}
           <span
@@ -37,19 +46,10 @@ function App() {
             }}
           >
             😊
-          </span>{" "}
+          </span>
           {좋아요}
         </h4>
         <p>발행 날짜</p>
-        <button
-          onClick={() => {
-            let copy = [...글제목];
-            copy[0] = "여자 코트 추천";
-            글제목변경(copy);
-          }}
-        >
-          이름 변경
-        </button>
       </div>
       <div className="list">
         <h4>{글제목[1]}</h4>
@@ -64,7 +64,42 @@ function App() {
           {글제목[2]}
         </h4>
         <p>발행 날짜</p>
-      </div>
+      </div> */}
+
+      {/*
+       map 함수
+       array 에 적용 가능한 함수.
+       array 의 개수만큼 내부 콜백 함수가 실행됨.
+       return 값을 array로 담아줌 
+       */}
+
+      {
+        // 글제목 역시 array 여서 map함수를 적용 가능
+        // 콜백 함수의 매개변수가 array 의 내부 요소가 됨
+        // 두번째 매개변수는 index 가 됨
+        글제목.map(function (a, i) {
+          return (
+            <div className="list" key={i}>
+              <h4>
+                {a}
+                <span
+                  onClick={() => {
+                    let copy = [...좋아요];
+                    copy[i] += 1;
+                    좋아요변경(copy);
+                  }}
+                >
+                  😊
+                </span>
+                {좋아요[i]}
+              </h4>
+
+              <p>발행 날짜</p>
+            </div>
+          );
+        })
+      }
+
       {modal ? <Modal></Modal> : null}
     </div>
   );
