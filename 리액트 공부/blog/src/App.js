@@ -14,6 +14,7 @@ function App() {
   let [좋아요, 좋아요변경] = useState([0, 0, 0]);
   let [modal, setModal] = useState(false);
   let [글제목인덱스, setIndex] = useState(0);
+  let [입력값, 입력값변경] = useState("");
 
   return (
     <div className="App">
@@ -38,73 +39,60 @@ function App() {
       >
         이름 변경
       </button>
-      {/* <div className="list">
-        <h4>
-          {글제목[0]}
-          <span
-            onClick={() => {
-              좋아요변경(++좋아요);
-            }}
-          >
-            😊
-          </span>
-          {좋아요}
-        </h4>
-        <p>발행 날짜</p>
-      </div>
-      <div className="list">
-        <h4>{글제목[1]}</h4>
-        <p>발행 날짜</p>
-      </div>
-      <div className="list">
-        <h4
-          onClick={() => {
-            setModal(!modal);
-          }}
-        >
-          {글제목[2]}
-        </h4>
-        <p>발행 날짜</p>
-      </div> */}
 
-      {/*
-       map 함수
-       array 에 적용 가능한 함수.
-       array 의 개수만큼 내부 콜백 함수가 실행됨.
-       return 값을 array로 담아줌 
-       */}
-
-      {
-        // 글제목 역시 array 여서 map함수를 적용 가능
-        // 콜백 함수의 매개변수가 array 의 내부 요소가 됨
-        // 두번째 매개변수는 index 가 됨
-        글제목.map(function (a, i) {
-          return (
-            <div className="list" key={i}>
-              <h4
-                onClick={() => {
-                  setModal(!modal);
-                  setIndex(i);
+      {글제목.map(function (a, i) {
+        return (
+          <div className="list" key={i}>
+            <h4
+              onClick={() => {
+                setModal(!modal);
+                setIndex(i);
+              }}
+            >
+              {a}
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  let copy = [...좋아요];
+                  copy[i] += 1;
+                  좋아요변경(copy);
                 }}
               >
-                {a}
-                <span
-                  onClick={() => {
-                    let copy = [...좋아요];
-                    copy[i] += 1;
-                    좋아요변경(copy);
-                  }}
-                >
-                  😊
-                </span>
-                {좋아요[i]}
-              </h4>
+                😊
+              </span>
+              {좋아요[i]}
+            </h4>
 
-              <p>발행 날짜</p>
-            </div>
-          );
-        })
-      }
+            <p>발행 날짜</p>
+            <button
+              onClick={() => {
+                let copy = [...글제목];
+                copy.splice(i, 1);
+                console.log(copy);
+                글제목변경(copy);
+              }}
+            >
+              삭제
+            </button>
+          </div>
+        );
+      })}
+
+      <input
+        type="text"
+        onChange={(e) => {
+          입력값변경(e.target.value);
+        }}
+      />
+      <button
+        onClick={() => {
+          let copy = [...글제목];
+          copy.push(입력값);
+          글제목변경(copy);
+        }}
+      >
+        글추가
+      </button>
       {modal ? (
         <Modal
           글제목={글제목}
