@@ -12,13 +12,13 @@ function App() {
     "글제목 3",
   ]);
   let [좋아요, 좋아요변경] = useState(0);
+  let [modal, setModal] = useState(false);
 
   return (
     <div className="App">
       <div className="black-nav">
         <h4>블로그</h4>
       </div>
-
       <div className="list">
         <button
           onClick={() => {
@@ -56,26 +56,19 @@ function App() {
         <p>발행 날짜</p>
       </div>
       <div className="list">
-        <h4>{글제목[2]}</h4>
+        <h4
+          onClick={() => {
+            setModal(!modal);
+          }}
+        >
+          {글제목[2]}
+        </h4>
         <p>발행 날짜</p>
       </div>
-      <Modal></Modal>
+      {modal ? <Modal></Modal> : null}
     </div>
-    // 병렬적으로 태그를 쓰고 싶으면
-    // <></> 로 감싸면 됨
   );
 }
-
-// 컴포넌트
-// html 을 조각화 시킴
-// 1. 반복적으로 자주 등장하거나
-// 2. 큰 하나의 페이지
-// 3. 자주 변경되는 것들
-// 컴포넌트를 남발하면 안됨
-
-const Modal2 = () => {};
-// 이런 방식으로 함수를 만들면 함수를 수정할수 없어서
-// 실수로 수정했을시 오류가 터진다는 이점
 
 function Modal() {
   return (
