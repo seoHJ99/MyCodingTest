@@ -47,7 +47,7 @@ function App() {
   );
 }
 
-function Product({ shoes }) {
+function Product(props) {
   return (
     <Col xs={6} md={4}>
       <img
@@ -55,8 +55,8 @@ function Product({ shoes }) {
         alt=""
         width="80%"
       />
-      <h4>{shoes.title}</h4>
-      <p>{shoes.content}</p>
+      <h4>{props.shoes.title}</h4>
+      <p>{props.shoes.content}</p>
     </Col>
   );
 }
