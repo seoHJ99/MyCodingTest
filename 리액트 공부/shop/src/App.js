@@ -10,8 +10,12 @@ import {
   Col,
 } from "react-bootstrap";
 import image from "./img/bg.png";
+import { useState } from "react";
+import data from "./data.js";
 
 function App() {
+  let [shoes] = useState(data);
+
   return (
     <div className="App">
       <Navbar expand="lg" className="bg-body-tertiary">
@@ -34,36 +38,26 @@ function App() {
       <Container>
         {/* Columns start at 50% wide on mobile and bump up to 33.3% wide on desktop */}
         <Row>
-          <Col xs={6} md={4}>
-            <img
-              src="https://codingapple1.github.io/shop/shoes3.jpg"
-              alt=""
-              width="80%"
-            />{" "}
-            <h4>상품명</h4>
-            <p>상품 설명</p>
-          </Col>
-          <Col xs={6} md={4}>
-            <img
-              src="https://codingapple1.github.io/shop/shoes3.jpg"
-              alt=""
-              width="80%"
-            />{" "}
-            <h4>상품명</h4>
-            <p>상품 설명</p>{" "}
-          </Col>
-          <Col xs={6} md={4}>
-            <img
-              src="https://codingapple1.github.io/shop/shoes3.jpg"
-              alt=""
-              width="80%"
-            />
-            <h4>상품명</h4>
-            <p>상품 설명</p>{" "}
-          </Col>
+          {shoes.map(function (element, index) {
+            return <Product shoes={shoes[index]}></Product>;
+          })}
         </Row>
       </Container>
     </div>
+  );
+}
+
+function Product({ shoes }) {
+  return (
+    <Col xs={6} md={4}>
+      <img
+        src="https://codingapple1.github.io/shop/shoes3.jpg"
+        alt=""
+        width="80%"
+      />
+      <h4>{shoes.title}</h4>
+      <p>{shoes.content}</p>
+    </Col>
   );
 }
 
