@@ -43,4 +43,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // lifecycle 사용하기 위한 임포트
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
 }
