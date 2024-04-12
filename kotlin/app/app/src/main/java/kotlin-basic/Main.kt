@@ -1,16 +1,18 @@
 fun main() {
-    println(sum(10, 20))
-    println(sum( b=10, a=30))
-    // 함수 사용시 매개변수를 명시적으로 지정 가능. 순서 상관 x
+    // new 키워드를 안쓰고도 객체 생성 가능
+    var john = Person("John", 20)
+    println(john.name)
+    print(john.age)
+
+    // val는 변경 불가능
+    // 이것을 이용해서 getter/setter 만들면 됨
+//    john.name = "ss"
+    john.age = 23
 }
 
-// 코틀린의 함수
-// fun으로 선언
-// 매개변수는 반드시 타입 지정, 기본값을 지정해주고 사용시 값을 안넣을수도 있음. js방식
-// 매개변수 선언부 다음에 : 타입  을 통해 리턴 타입을 지정해줄수 있음
-fun sum(a: Int, b: Int): Int {
-    return a + b
-}
-
-// 간략화
-fun sum2(a: Int, b: Int, c: Int =0) = a + b
+// 클래스의 내부 필드는 괄호 안에 적음
+// 길어질수 있기에 줄바꿈도 지원.
+class Person(
+    val name: String,
+    var age: Int
+)
