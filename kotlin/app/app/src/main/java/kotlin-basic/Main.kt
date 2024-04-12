@@ -1,42 +1,20 @@
 fun main() {
-    val i = 5
+    val items = listOf(1, 2, 3, 4, 5)
 
-    // if 문
+    // js 의 for 문처럼 사용
+    for (item in items) {
+        println(item)
+    }
+    items.forEach { item -> println(item) }
 
-    if (i > 10) {
-        println("10보다 크다.")
-    } else if (i < 10) {
-        println("10보다 작다")
-    } else {
-        println("10이다.")
+    // 기존 java의 for문은 시작 숫자 .. 끝나는 숫자로 지정해주는 방식
+    for(i in 0 .. 3){
+        println(i)
     }
 
-    // when 문
-    when {
-        i > 10 -> {
-            println("10보다 크다.")
-        }
-        i < 10 -> {
-            println("10보다 작다")
-        }
-        else -> {
-            println("10이다.")
-        }
+    for(i in 0 .. items.size-1){
+        println(items[i])
     }
 
-    // if문 식 자체를 변수로 받을수 있음.
-    // when 도 가능
-    var result = if (i > 10) {
-        "10보다 크다."
-    } else if (i < 10) {
-        "10보다 작다"
-    } else {
-        "10이다."
-    }
-    println(result)
-
-
-    // 코틀린 삼항연산자
-    var k = 5
-    var result2 = if (k>10) true else false
+    // while문은 자바와 완전히 동일
 }
