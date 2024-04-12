@@ -1,9 +1,7 @@
-import kotlin.math.max
 
+import kotlin.random.Random
 
 fun main() {
-    var i = 10
-    var j = 20
-
-    println(max(i,j))
+    val randomNumber = Random.nextInt(0 ,100)  // 0~99 사이에 임의의 수
+    println(randomNumber)
 }
