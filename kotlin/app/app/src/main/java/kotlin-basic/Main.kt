@@ -1,3 +1,15 @@
+fun main() {
+    val dog : Animal = Dog()
+    val cat = Cat()
+
+//    dog.draw()
+    if(dog is Dog){
+        // is를 통과하며 형변환이 이뤄져서 draw 를 사용할수 있음.
+        dog.draw()
+        println("강아지")
+    }
+}
+
 interface Drawable{
     fun draw()
 }
@@ -7,9 +19,6 @@ abstract class Animal{
         println("이동")
     }
 }
-
-// 인터페이스는 상속받을때 () 필요 없음
-// 콤마(,) 를 통해 다중 상속 가능
 
 class Dog : Animal(), Drawable {
     override fun move() {
