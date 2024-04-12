@@ -1,14 +1,11 @@
 
 
 fun main() {
-    var i = 10
-    var l = 20L
+    var hello = "hello"
+    println(hello.uppercase())
+    println(hello[0])
 
-//    l = i 불가능.
-    l = i.toLong()
-    i = l.toInt()
-
-    var name = "10"
-    i = name.toInt()
+    var name = "호준"
+    println("제이름은 ${name + 10}입니다.")
     
 }
