@@ -1,33 +1,12 @@
 fun main() {
-    val dog : Animal = Dog()
-    val cat = Cat()
+//    val box = Box<Int>(10)
+    val box = Box(10)
+    val box2 = Box("dasfd")
 
-
-    // 강제 타입 변환 as
-    // 오류가 발생할수 있음
-    cat as Dog
-
+    println(box.value)
 }
 
-interface Drawable{
-    fun draw()
+class Box<T>(var value: T){
+
 }
-
-abstract class Animal{
-    open fun move(){
-        println("이동")
-    }
-}
-
-class Dog : Animal(), Drawable {
-    override fun move() {
-        println("껑충")
-    }
-
-    override fun draw() {
-        TODO("Not yet implemented")
-    }
-}
-
-class Cat : Animal()
 
