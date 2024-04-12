@@ -1,14 +1,14 @@
 
-const val num = 20
 
 fun main() {
     var i = 10
-    var i2: Int = 10
+    var l = 20L
 
-    var name = "호준"
-    var name2: String = "호준"
+//    l = i 불가능.
+    l = i.toLong()
+    i = l.toInt()
 
-    var point = 3.3
-    var point2: Double = 3.3
-
+    var name = "10"
+    i = name.toInt()
+    
 }
