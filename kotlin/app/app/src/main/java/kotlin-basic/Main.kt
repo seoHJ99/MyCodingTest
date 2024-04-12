@@ -8,4 +8,7 @@ fun main(){
 
     var point = 3.3
     var point2 : Double = 3.3
+
+    val num =20
+    
 }
