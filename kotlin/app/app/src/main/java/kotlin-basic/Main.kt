@@ -1,20 +1,12 @@
 fun main() {
+    // 변경이 불가능한 리스트 listOf
     val items = listOf(1, 2, 3, 4, 5)
 
-    // js 의 for 문처럼 사용
-    for (item in items) {
-        println(item)
-    }
-    items.forEach { item -> println(item) }
+    // 변경이 가능한 리스트 mutableListOf
+    // 제네릭이 생략되어 있음.
+    val  items2 = mutableListOf(1, 2, 3, 4, 5)
 
-    // 기존 java의 for문은 시작 숫자 .. 끝나는 숫자로 지정해주는 방식
-    for(i in 0 .. 3){
-        println(i)
-    }
+    items2.add(6)
+    items2.remove(3)
 
-    for(i in 0 .. items.size-1){
-        println(items[i])
-    }
-
-    // while문은 자바와 완전히 동일
 }
