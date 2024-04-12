@@ -2,12 +2,11 @@ fun main() {
     val dog : Animal = Dog()
     val cat = Cat()
 
-//    dog.draw()
-    if(dog is Dog){
-        // is를 통과하며 형변환이 이뤄져서 draw 를 사용할수 있음.
-        dog.draw()
-        println("강아지")
-    }
+
+    // 강제 타입 변환 as
+    // 오류가 발생할수 있음
+    cat as Dog
+
 }
 
 interface Drawable{
