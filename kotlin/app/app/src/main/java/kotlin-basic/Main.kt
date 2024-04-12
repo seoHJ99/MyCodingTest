@@ -1,9 +1,42 @@
-import java.util.Scanner
-
 fun main() {
-    // 자바 Scanner 대신 코틀린 Scanner 사용
-    // in 은 코틀린에서 사용 불가능한 키워드여서 ``로 감싸줘야함.
-    val reader = Scanner(System.`in`)
-    reader.nextInt()
-    reader.next()
+    val i = 5
+
+    // if 문
+
+    if (i > 10) {
+        println("10보다 크다.")
+    } else if (i < 10) {
+        println("10보다 작다")
+    } else {
+        println("10이다.")
+    }
+
+    // when 문
+    when {
+        i > 10 -> {
+            println("10보다 크다.")
+        }
+        i < 10 -> {
+            println("10보다 작다")
+        }
+        else -> {
+            println("10이다.")
+        }
+    }
+
+    // if문 식 자체를 변수로 받을수 있음.
+    // when 도 가능
+    var result = if (i > 10) {
+        "10보다 크다."
+    } else if (i < 10) {
+        "10보다 작다"
+    } else {
+        "10이다."
+    }
+    println(result)
+
+
+    // 코틀린 삼항연산자
+    var k = 5
+    var result2 = if (k>10) true else false
 }
