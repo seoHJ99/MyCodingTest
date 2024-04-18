@@ -6,6 +6,9 @@ plugins {
 android {
     namespace = "com.example.activity_view"
     compileSdk = 34
+    viewBinding {
+        enable = true
+    }
 
     defaultConfig {
         applicationId = "com.example.activity_view"
