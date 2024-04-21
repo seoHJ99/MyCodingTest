@@ -2,6 +2,7 @@ package com.example.event
 
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.MotionEvent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -32,5 +33,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         return super.onTouchEvent(event)
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        Log.d("MOTION", "키 다운")
+        when(keyCode){
+            KeyEvent.KEYCODE_0 -> Log.d("MOTION", "${KeyEvent.KEYCODE_0}")
+            KeyEvent.KEYCODE_A -> Log.d("MOTION", "${KeyEvent.KEYCODE_A}")
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        Log.d("MOTION", "키 업")
+        return super.onKeyUp(keyCode, event)
     }
 }
