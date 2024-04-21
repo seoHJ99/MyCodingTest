@@ -7,6 +7,10 @@ android {
     namespace = "com.example.event"
     compileSdk = 34
 
+    viewBinding{
+        enable = true
+    }
+
     defaultConfig {
         applicationId = "com.example.event"
         minSdk = 33
