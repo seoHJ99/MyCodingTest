@@ -1,7 +1,11 @@
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
-// styled.태그 스타일 css 적용하면 페이지 로딩 시간 단축. 현재 페이지에만 적용 가능
+// styled 컴포넌트.
+// css 적용된 컴포넌트를 만듬
+// styled.태그 스타일
+// 장점: css 적용하면 페이지 로딩 시간 단축. 현재 페이지에만 적용 가능
+// 단점: 1. 복잡. 2. 결국 외부 css를 임포트하면 시간 똑같음. 3. 협업시 숙련도 이슈
 
 let YellowBtn = styled.button`
   background: ${(props) => props.bg};
@@ -9,7 +13,7 @@ let YellowBtn = styled.button`
   padding: 10px;
 `;
 
-// 기존 css 복사해서 커스텀 가능
+// 기존 styled 컴포넌트 복사해서 커스텀 가능
 let newBtn = styled.button(YellowBtn);
 
 let Box = styled.div`
