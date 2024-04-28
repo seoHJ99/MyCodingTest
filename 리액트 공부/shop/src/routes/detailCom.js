@@ -1,41 +1,64 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import styled from "styled-components";
 
-// styled 컴포넌트.
-// css 적용된 컴포넌트를 만듬
-// styled.태그 스타일
-// 장점: css 적용하면 페이지 로딩 시간 단축. 현재 페이지에만 적용 가능
-// 단점: 1. 복잡. 2. 결국 외부 css를 임포트하면 시간 똑같음. 3. 협업시 숙련도 이슈
+// 컴포넌트의 lifecycle (생명주기)
+// mount: 컴포넌트가 페이지에 장착
+// update : 컴포넌트 업데이트
+// unmount : 페이지에서 컴포넌트 제거
+// 이 과정 중간에 코드를 실행하고자 lifecycle을 이용
+// ex) 마운트 될때 특정 코드 실행
 
-let YellowBtn = styled.button`
-  background: ${(props) => props.bg};
-  color: ${(props) => (props.bg == "blue" ? "white" : "black")};
-  padding: 10px;
-`;
+// 과거 방식
+// class Detail2 extends React.Component {
+//   componentDidMount() {
+//     // 컴포넌트가 장착될때
+//   }
 
-// 기존 styled 컴포넌트 복사해서 커스텀 가능
-let newBtn = styled.button(YellowBtn);
+//   componentDidUpdate() {}
 
-let Box = styled.div`
-  background : Grey;
-  padding 20px
-`;
-// css 파일 이름을 js파일이름.modules.css 형식으로 작성하면 해당 모듈에만 css적용됨
+//   componentWillUnmount() {}
+// }
+
+// 요즘 장식
+// useEffect(()->{})
 
 function Detail(props) {
+  // useEffect 내부에 있으면 전부 랜더링 된 다음 실행
+  // 밖에 쓰면 랜더링 중간에 실행될수도 있음
+  // 먼저 사용자에게 화면을 보여주는데 의의가 있음
+
+  let [alert, setAlert] = useState(true);
+  useEffect(() => {
+    // mount 나 update시 실행
+    console.log("안녕?");
+
+    setTimeout(() => {
+      setAlert(false);
+    }, 2000);
+  });
+
+  let [count, setCount] = useState(0);
+
   let { id } = useParams();
   let findProduct = props.shoes.find(function (x) {
     return x.id == id;
   });
 
-  console.log(findProduct);
   return (
     <div className="container">
-      <Box>
-        <YellowBtn bg="blue">버튼</YellowBtn>
-        <YellowBtn bg="orange">버튼</YellowBtn>
-      </Box>
-
+      {count}
+      <button
+        onClick={() => {
+          setCount(count + 1);
+        }}
+      >
+        버튼
+      </button>
+      {/* 숙제 */}
+      {alert == true ? (
+        <div className="alert alert-warning">2초 이후 사라져야 함</div>
+      ) : null}
+      {/*  */}
       <div className="row">
         <div className="col-md-6">
           <img

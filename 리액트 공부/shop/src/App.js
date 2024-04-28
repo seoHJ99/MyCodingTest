@@ -72,8 +72,16 @@ function App() {
 }
 
 function Product(props) {
+  let navigate = useNavigate();
+
   return (
-    <Col xs={6} md={4}>
+    <Col
+      xs={6}
+      md={4}
+      onClick={() => {
+        navigate("/detail/" + (props.i - 1));
+      }}
+    >
       <img
         src={"https://codingapple1.github.io/shop/shoes" + props.i + ".jpg"}
         alt=""

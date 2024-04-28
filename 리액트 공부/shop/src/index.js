@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
+  // 이것때문에 콘솔 두번 출력
   <React.StrictMode>
     <BrowserRouter>
       <App />
