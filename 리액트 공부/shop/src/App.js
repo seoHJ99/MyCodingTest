@@ -14,11 +14,12 @@ import { useState } from "react";
 import data from "./data.js";
 import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
 import Detail from "./routes/detailCom.js";
+import axios from "axios";
 
 function App() {
   let [shoes] = useState(data);
-  // 페이지 이동을 도와주는 useNavigate() 함수
   let navigate = useNavigate();
+  let [ajaxData, setAjax] = useState([]);
 
   return (
     <div className="App">
@@ -67,6 +68,29 @@ function App() {
         />
         <Route path="/detail/:id" element={<Detail shoes={shoes}></Detail>} />
       </Routes>
+      <button
+        onClick={() => {
+          axios
+            .get("https://codingapple1.github.io/shop/data2.json")
+            .then((data) => {
+              console.log(data.data);
+              setAjax(data.data);
+            })
+            .catch(() => {
+              console.log("실패");
+            });
+        }}
+      >
+        ajax통신
+      </button>
+      {ajaxData.map(function (element, index) {
+        return (
+          <div>
+            {element.title}
+            <div>{element.price}</div>
+          </div>
+        );
+      })}
     </div>
   );
 }

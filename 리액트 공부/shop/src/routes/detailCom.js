@@ -14,17 +14,11 @@ function Detail(props) {
       console.log("xxxxxxxxxxx");
     }, 2000);
 
-    // useEffect 동작 전에 실행되는 함수는 return으로 넘김
-    // clean Up Function
-    // mount 시 실행안되지만 unmount 시에는 실행됨
     return () => {
-      // 타이머 같은 코드를 작성할때 기존 타이머 시간 제거 등으로 사용
-      // 오래 걸리는 요청이 계속 날아가(새로고침 등으로) 중복되는 것을 막기 위해서 기존 요청 제거시 사용
       clearTimeout(a);
       console.log("eeeeeeeeeeeeeeee");
     };
-  }, [count]); // []내부의 값: 디펜던시. 해당 변수가 변할때만 실행됨
-  // 디펜던시 값이 없으면 mount시에만 실행
+  }, [count]);
 
   let [input, setInput] = useState(0);
 
@@ -72,13 +66,3 @@ function Detail(props) {
 }
 
 export default Detail;
-
-// useEffect
-// 1. 재렌더링마다 코드 실행
-//    useEffect(()={})
-// 2. mount 시마다 1회만 실행
-//    useEffect(()={}, [])
-// 3. unmount 시 코드 1회 실행
-//    useEffect(()={
-//     return ()={}
-//   }, [])
