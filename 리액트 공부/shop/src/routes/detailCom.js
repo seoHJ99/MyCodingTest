@@ -9,25 +9,19 @@ function Detail(props) {
   });
 
   useEffect(() => {
-    console.log("1111111");
-    let a = setTimeout(() => {
-      console.log("xxxxxxxxxxx");
-    }, 2000);
+    let a = setTimeout(() => {}, 2000);
 
     return () => {
       clearTimeout(a);
-      console.log("eeeeeeeeeeeeeeee");
     };
   }, [count]);
 
   let [input, setInput] = useState(0);
 
   useEffect(() => {
-    console.log(input);
     if (isNaN(input)) {
-      alert("xxx");
+      alert("오직 숫자만");
     }
-    console.log("xx");
   }, [input]);
 
   return (

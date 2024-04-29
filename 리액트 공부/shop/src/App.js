@@ -19,6 +19,8 @@ import axios from "axios";
 function App() {
   let [shoes, setShoes] = useState(data);
   let navigate = useNavigate();
+  let [btnCount, setCount] = useState(2);
+  let [loading, setLoading] = useState(false);
 
   return (
     <div className="App">
@@ -67,23 +69,33 @@ function App() {
         />
         <Route path="/detail/:id" element={<Detail shoes={shoes}></Detail>} />
       </Routes>
-      <button
-        onClick={() => {
-          axios
-            .get("https://codingapple1.github.io/shop/data2.json")
-            .then((data) => {
-              console.log(data.data);
-              let copy = [...shoes, ...data.data];
-              setShoes(copy);
-              console.log(shoes);
-            })
-            .catch(() => {
-              console.log("실패");
-            });
-        }}
-      >
-        ajax통신
-      </button>
+      {loading == true ? <div>로딩중</div> : null}
+      {btnCount === 4 ? null : (
+        <button
+          onClick={() => {
+            setLoading(true);
+            setTimeout(() => {}, 100000);
+            axios
+              .get(
+                "https://codingapple1.github.io/shop/data" + btnCount + ".json"
+              )
+
+              .then((data) => {
+                let copy = [...shoes, ...data.data];
+                setShoes(copy);
+                console.log(btnCount);
+                setCount(btnCount + 1);
+                setLoading(false);
+              })
+              .catch(() => {
+                console.log("실패");
+                setLoading(false);
+              });
+          }}
+        >
+          ajax통신 더보기 버튼
+        </button>
+      )}
     </div>
   );
 }
