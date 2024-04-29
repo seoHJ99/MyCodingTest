@@ -74,16 +74,13 @@ function App() {
         <button
           onClick={() => {
             setLoading(true);
-            setTimeout(() => {}, 100000);
             axios
               .get(
                 "https://codingapple1.github.io/shop/data" + btnCount + ".json"
               )
-
               .then((data) => {
                 let copy = [...shoes, ...data.data];
                 setShoes(copy);
-                console.log(btnCount);
                 setCount(btnCount + 1);
                 setLoading(false);
               })
@@ -91,6 +88,17 @@ function App() {
                 console.log("실패");
                 setLoading(false);
               });
+
+            // 데이터 전송
+            // axios.post("/url", {name : 'kim'});
+            // 동시 요청
+            // Promise.all([
+            //   axios.post("/url", { name: "kim" }),
+            //   axios.post("/url2", { name: "kim" }),
+            //   ]).then(() => {});
+
+            // 기본 fetch요청
+            // fetch('url').then()
           }}
         >
           ajax통신 더보기 버튼
