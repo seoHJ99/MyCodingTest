@@ -63,47 +63,38 @@ function App() {
                     );
                   })}
                 </Row>
+                {loading == true ? <div>로딩중</div> : null}
+                {btnCount === 4 ? null : (
+                  <button
+                    onClick={() => {
+                      setLoading(true);
+                      axios
+                        .get(
+                          "https://codingapple1.github.io/shop/data" +
+                            btnCount +
+                            ".json"
+                        )
+                        .then((data) => {
+                          let copy = [...shoes, ...data.data];
+                          setShoes(copy);
+                          setCount(btnCount + 1);
+                          setLoading(false);
+                        })
+                        .catch(() => {
+                          console.log("실패");
+                          setLoading(false);
+                        });
+                    }}
+                  >
+                    ajax통신 더보기 버튼
+                  </button>
+                )}
               </Container>
             </>
           }
         />
         <Route path="/detail/:id" element={<Detail shoes={shoes}></Detail>} />
       </Routes>
-      {loading == true ? <div>로딩중</div> : null}
-      {btnCount === 4 ? null : (
-        <button
-          onClick={() => {
-            setLoading(true);
-            axios
-              .get(
-                "https://codingapple1.github.io/shop/data" + btnCount + ".json"
-              )
-              .then((data) => {
-                let copy = [...shoes, ...data.data];
-                setShoes(copy);
-                setCount(btnCount + 1);
-                setLoading(false);
-              })
-              .catch(() => {
-                console.log("실패");
-                setLoading(false);
-              });
-
-            // 데이터 전송
-            // axios.post("/url", {name : 'kim'});
-            // 동시 요청
-            // Promise.all([
-            //   axios.post("/url", { name: "kim" }),
-            //   axios.post("/url2", { name: "kim" }),
-            //   ]).then(() => {});
-
-            // 기본 fetch요청
-            // fetch('url').then()
-          }}
-        >
-          ajax통신 더보기 버튼
-        </button>
-      )}
     </div>
   );
 }
