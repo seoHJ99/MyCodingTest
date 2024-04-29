@@ -17,9 +17,8 @@ import Detail from "./routes/detailCom.js";
 import axios from "axios";
 
 function App() {
-  let [shoes] = useState(data);
+  let [shoes, setShoes] = useState(data);
   let navigate = useNavigate();
-  let [ajaxData, setAjax] = useState([]);
 
   return (
     <div className="App">
@@ -74,7 +73,9 @@ function App() {
             .get("https://codingapple1.github.io/shop/data2.json")
             .then((data) => {
               console.log(data.data);
-              setAjax(data.data);
+              let copy = [...shoes, ...data.data];
+              setShoes(copy);
+              console.log(shoes);
             })
             .catch(() => {
               console.log("실패");
@@ -83,14 +84,6 @@ function App() {
       >
         ajax통신
       </button>
-      {ajaxData.map(function (element, index) {
-        return (
-          <div>
-            {element.title}
-            <div>{element.price}</div>
-          </div>
-        );
-      })}
     </div>
   );
 }
