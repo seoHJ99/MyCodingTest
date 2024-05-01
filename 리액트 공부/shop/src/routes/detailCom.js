@@ -25,8 +25,17 @@ function Detail(props) {
     }
   }, [input]);
 
+  let [fade2, setFade2] = useState("");
+  useEffect(() => {
+    setTimeout(() => {
+      setFade2("end");
+    }, 100);
+    return () => {
+      setFade2("");
+    };
+  }, []);
   return (
-    <div className="container">
+    <div className={"container start " + fade2}>
       {count}
       <button
         onClick={() => {
@@ -94,19 +103,25 @@ function Detail(props) {
   );
 }
 
-// props 의 축약버전. 매개변수에 바로 {} 쓰고 그 안에 props 이름 쓰면 됨
 function TapContent({ 탭 }) {
-  // if문 사용 버전
-  // if (탭 == 0) {
-  //   return <div>내용0</div>;
-  // } else if (탭 == 1) {
-  //   return <div>내용1</div>;
-  // } else if (탭 == 2) {
-  //   return <div>내용2</div>;
-  // }
+  // 리액트 automatic batching 기능이 있음
+  // state 변경이 여러번 이뤄지면, 모든 변경이 이뤄지고 난 이후 최종 결과만 적용한체 재랜더링이 이뤄짐
+  // 그래서 시간차를 두지 않으면 최종 결과본만 적용함
+  let [fade, setFade] = useState("");
+  useEffect(() => {
+    setTimeout(() => {
+      setFade("end");
+    }, 100);
+    return () => {
+      setFade("");
+    };
+  }, [탭]);
 
-  // array 로 사용하는 버전
-  return [<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][탭];
+  return (
+    <div className={"start " + fade}>
+      {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][탭]}
+    </div>
+  );
 }
 
 export default Detail;
