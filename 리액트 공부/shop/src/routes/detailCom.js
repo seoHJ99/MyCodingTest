@@ -1,8 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Nav } from "react-bootstrap";
+// context Api 사용법
+// 문제점
+// 1. context 로 넘겨진 state 를 안쓰더라도 state 가 변경되면 무조건 재렌더링됨
+// 2. 자식 컴포넌트를 다른 페이지에서 재사용하려고 하면 context 가 안넘겨져서 오류 발생
+import { Context1 } from "./../App.js";
 
 function Detail(props) {
+  let { 재고, shoes } = useContext(Context1);
+
   let [count, setCount] = useState(0);
   let { id } = useParams();
   let findProduct = props.shoes.find(function (x) {
@@ -98,16 +105,14 @@ function Detail(props) {
           </Nav.Link>
         </Nav.Item>
       </Nav>
-      <TapContent 탭={탭}></TapContent>
+      <TapContent 탭={탭} shoes={props.shoes}></TapContent>
     </div>
   );
 }
 
-function TapContent({ 탭 }) {
-  // 리액트 automatic batching 기능이 있음
-  // state 변경이 여러번 이뤄지면, 모든 변경이 이뤄지고 난 이후 최종 결과만 적용한체 재랜더링이 이뤄짐
-  // 그래서 시간차를 두지 않으면 최종 결과본만 적용함
+function TapContent({ 탭, shoes }) {
   let [fade, setFade] = useState("");
+  let { 재고 } = useContext(Context1);
   useEffect(() => {
     setTimeout(() => {
       setFade("end");
@@ -119,7 +124,7 @@ function TapContent({ 탭 }) {
 
   return (
     <div className={"start " + fade}>
-      {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][탭]}
+      {[<div>{shoes[0].title}</div>, <div>{재고}</div>, <div>내용2</div>][탭]}
     </div>
   );
 }

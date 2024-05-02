@@ -10,14 +10,19 @@ import {
   Col,
 } from "react-bootstrap";
 import image from "./img/bg.png";
-import { useState } from "react";
+import { createContext, useState } from "react";
 import data from "./data.js";
 import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
 import Detail from "./routes/detailCom.js";
 import axios from "axios";
 
+// context Api 사용
+export let Context1 = createContext();
+
 function App() {
   let [shoes, setShoes] = useState(data);
+  let [재고] = useState([10, 11, 12]);
+
   let navigate = useNavigate();
   let [btnCount, setCount] = useState(2);
   let [loading, setLoading] = useState(false);
@@ -93,7 +98,14 @@ function App() {
             </>
           }
         />
-        <Route path="/detail/:id" element={<Detail shoes={shoes}></Detail>} />
+        <Route
+          path="/detail/:id"
+          element={
+            <Context1.Provider value={{ 재고, shoes }}>
+              <Detail shoes={shoes}></Detail>
+            </Context1.Provider>
+          }
+        />
       </Routes>
     </div>
   );
