@@ -13,8 +13,9 @@ import image from "./img/bg.png";
 import { createContext, useState } from "react";
 import data from "./data.js";
 import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
-import Detail from "./routes/detailCom.js";
+import Detail from "./routes/DetailCom.js";
 import axios from "axios";
+import Cart from "./routes/Cart.js";
 
 // context Api 사용
 export let Context1 = createContext();
@@ -31,7 +32,7 @@ function App() {
     <div className="App">
       <Navbar expand="lg" className="bg-body-tertiary">
         <Container>
-          <Navbar.Brand href="#home">쇼핑몰</Navbar.Brand>
+          <Navbar.Brand href="/">쇼핑몰</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
@@ -106,6 +107,7 @@ function App() {
             </Context1.Provider>
           }
         />
+        <Route path="/cart" element={<Cart></Cart>}></Route>
       </Routes>
     </div>
   );

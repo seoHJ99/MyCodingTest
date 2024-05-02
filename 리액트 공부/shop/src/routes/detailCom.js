@@ -5,7 +5,7 @@ import { Nav } from "react-bootstrap";
 // 문제점
 // 1. context 로 넘겨진 state 를 안쓰더라도 state 가 변경되면 무조건 재렌더링됨
 // 2. 자식 컴포넌트를 다른 페이지에서 재사용하려고 하면 context 가 안넘겨져서 오류 발생
-import { Context1 } from "./../App.js";
+import { Context1 } from "../App.js";
 
 function Detail(props) {
   let { 재고, shoes } = useContext(Context1);
