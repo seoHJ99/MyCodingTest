@@ -1,0 +1,130 @@
+-----------------------------------
+클라우드 마이그레이션 중 AWS Control Tower 계획 및 구성
+
+마이그레이션 3단계
+1. 평가 : 마이그레이션 준비 상태 평가. 이전 사례 파악
+    - 이해관계자 파악
+    - 랜딩 존 요구사항 범위 파악
+2. 활용 : 계획을 세우고 랜딩존 구축.
+    - 계정 구조 설계
+    - ou를 사용하여 계정 구성 (그룹화, 공통 정책 적용, 공용 리소스 공유)
+3. 마이그레이션 및 현대화 : 마이그레이션 팩토리 개발. 클라우드 네이티브 기술로 현대화
+
+스타터 다중 계정 전략 구현
+스타터 OU 2개(보안 및 샌드박스)
+추가 스타터 OU(예: 인프라 OU, 워크로드 OU) 2개를 생성하여 초기 AWS Control Tower 배포에서 확장 가능
+    - 인프라 ou :  모든 네트워크 트래픽의 중앙 허브 역할을 하는 네트워킹 계정으로 구성.
+    - 워크로드 OU : 애플리케이션별로 계정을 배포
+
+중첩 OU 사용 가능
+
+설계 고려 사항
+ 계층 구조의 상위에 있는 좀 덜 세부적인 정책을 적용
+
+
+랜딩 존에 적합한 제어 기능 수립 및 선택
+SCP, AWS Config 규칙, AWS CloudFormation Hooks로 자체 사용자 지정 제어를 생성
+
+
+포괄적 제어 관리
+AWS Control Tower 콘솔의 Controls library(제어 라이브러리)를 사용하면 사용 가능한 수백 개의 제어를 살펴볼 수 있습니다
+
+
+
+-------------------------------------------------------
+AWS Control Tower 랜딩 존 설정 모범 사례
+
+관리 계정 고려 사항
+관리계정 : AWS Control Tower 배포와 AWS Organizations의 지급인 계정 역할
+    - IAM Identity Center 사용자로 로그인
+    - 엄격하게 범위가 지정된 역할을 사용
+    - 관리 계정에 최소 권한의 정책이 구현
+
+
+AWS Control Tower 배포 준비
+   - 공유 걔쩡 이메일 주소 생성
+   - 필수 파라미터 문서화
+   - 홈 리전 고려사항
+
+AWS Control Tower 배포
+1. 모든 기본값 파라미터를 사용하여 Quick Start 프로시저로 배포
+2. 사용자 파라미터 설정을 사용하여 배
+대부분의 파라미터는 설정되고도 변경 가능. 불가능 파라미터도 존재.
+
+
+AWS Control Tower Account Factory 구성
+기본적으로 각 새 계정에 VPC 및 서브넷을 프로비저닝하도록 구성
+
+
+기존 AWS Organizations의 AWS Control Tower 랜딩 존으로 마이그레이션할 때의 모범 사례
+조직 등록 :  기존 조직을 Control Tower 로 가져오는 것
+    - OU를 등록할 때 해당 멤버 계정은 AWS Control Tower 랜딩 존에 등록됨.
+
+
+AWS Organizations에서 AWS Control Tower로 AWS 멤버 계정 마이그레이션
+기존 조직에 Control Tower 랜딩 존을 설정하면, 기존 Organizations의 관리 계정을 자체 관리 계정으로 사용
+
+AWS Control Tower 제어가 적용되지 않는 경우
+    - AWS Control Tower Account Factory가 아닌 곳에서 생성된 새 계정
+    - AWS Control Tower에 등록되지 않은 OU에서 생성된 새 계정
+    - AWS Control Tower가 아닌 곳에서 등록한 모든 새 OU 또는 계정
+
+
+AWS Control Tower는 AWS CloudFormation StackSets를 사용하여 WS CloudTrail, 통합 로깅과 같은 리소스를 생성
+AWS Config 적합성 팩을 사용하면 규정 준수 규칙 패키지를 만들수 있따.
+    -적합성 팩의 경우 리전에서의 AWS Config 기록이 활성화 필요
+
+적합성 팩 배포
+1. AWS Control Tower 홈 리전에 CloudFormation 스택을 배포
+2. AWS Control Tower 감지 가드레일 적합성 팩을 배포
+   - 개별 또는 조직 수준 선택
+3. 모든 계정에 AWS Control Tower 감지 제어를 구현
+
+
+
+------------------------------------------------------------------
+AWS Control Tower 랜딩 존 확장
+ou를 추가해서 확장 가능
+AWS Control Tower에서 관리되지 않는 조직에 계정이 있는 경우 계정을 마이그레이션하면 예방 제어 및 감지 제어 기능을 활용하고 AWS Control Tower 거버넌스에 포함될 수 있다.
+
+
+
+-----------------------------------------------------
+AWS Control Tower 랜딩 존 사용자 지정
+사용자 지정 범주
+1. 자격 증명  관리
+2. 보안
+3. 네트워킹
+4. 로깅
+5. 제어
+
+
+*계정 사용자 지정 프레임워크 및 솔루션
+파이프라인 기반 사용자 지정 프레임워크 및 솔루션
+사용자 지정
+CfCT(Customizations for AWS Control Tower)를 사용하면 랜딩 존을 사용자 지정하고 모범사례 충족
+    - AWS Control Tower가 배포된 관리 계정 내에 있어야 함.
+    - 사용자 지정은 AWS Control Tower 실행 역할을 사용하여 모든 계정에 스택을 배포
+    - 사용자 지정은 Organizations의 계정 및 SCP 전반에서 StackSets를 사용하여 CloudFormation 템플릿으로 구현
+
+CfCT의 사용자 지정 프레임워크
+관리 계정에서 배포된 CloudFormation 템플릿이 포함.
+계정을 사용자 지정하고 업데이트하여 프로덕션 준비 상태로 전환하는 경우에만 CfCT를 사용
+2개의 워크플로
+1. AWS CodePipeline 워크플로
+2. AWS Control Tower 수명 주기 이벤트 워크플로
+트리거되는 방식이 다름
+CodePipeline 기반 워크플로
+매니페스트 파일이 있어야 워크로드를 시작.
+ 매니페스트 파일: 텍스틒 ㅏ일. 다른 계정이나 OU 에 배포하려는 템플릿 지정
+매니페스트 파일과 파라미터는 AWS CodeCommit 또는 Amazon S3에 저장
+
+
+Account Factory for Terraform
+Terraform 파이프라인을 설정하여 AWS Control Tower에 있는 계정을 프로비저닝 및 사용자 지정
+   AFT 관리 계정이라는 추가 AWS 계정 생성 필요
+   관리 계정에서 다른 AWS 서비스의 기능을 제공하는 AFT 기능을 배포
+
+
+Account Factory Customization으로 계정 사용자 지정
+AFC은 AWS Control Tower의 기본 사용자 지정 기능
