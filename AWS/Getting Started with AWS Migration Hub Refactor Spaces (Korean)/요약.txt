@@ -1,0 +1,34 @@
+-------------------------------
+Refactor Spaces
+마이크로 서비스로 점진적 리팩토링을 위한 서비스
+Strangler Fig 패턴 : 모놀리스를 마이크로 서비스로 분해
+리브 앤드 레이어 방식 : 새로운 마이크로 서비스 기능 추가
+1. AWS 계정 전반에서 네트워킹을 연결하기 위해 AWS Transit Gateway와 Virtual Private Cloud(VPC)를 오케스트레이션
+
+Refactor Spaces API 요청은 요청당 요금
+
+사용법
+1. Amazon API Gateway와 NLB 가 존재하는 vpc 와 연결
+2. vpc 외부, Refactor Spaces 소유자의 계젱에 Transit Gateway를 생성
+3. 기존의 모놀리스 어플과 마이크로 서비스 계정을 만듬
+4. Transit Gateway로 두 계정과 연결하여, 상황에 맞게 트래픽 조정
+
+리팩토링 스페이스 생성
+1. migration hub 들어가서 Refactor Spaces 선택. environment 선택 
+2. create. next
+3. vpc 선택.
+4. endpoint 유형 성택
+5. 환경을 공유할것인지
+6. 생성
+7. 어플리케이션 서비스 추가. create Service. 
+8. endpoint 타입 선택. vpc 선택, endpoint 입력
+9. route traffic to this Service 선택
+10. 기본 라우팅 주소로 체크. 활성 상태로 클릭
+11. 새로운 마이크로 서비스 생성. create 서비스
+12. 8~10 처럼 환경 구성. 다만 엔드포인트는 새롭게 생성될 마이크로 서비스 엔드포인트.
+13.  이제 어플을 돌리면 됨
+
+삭제방법
+1. Refactor Spaces 로 이동
+2. detail 에 들어가서 삭제하고 싶은 vpc 환경을 선택. 그리고 delete
+3. 모든 vpc 환경이 삭제됐으면 Refactor Spaces 자체를 삭제
