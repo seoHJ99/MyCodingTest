@@ -118,7 +118,7 @@ canary 릴리스 : 무중단 배포 기법. 소규모 사용자들에게 먼저 
 aws step Function 을 통한 오케스트레이션
 
 AWS Step Function : 워크플로 오케스트레이션 도구. 순서도.
-workflow studio : 업무 흐름을 시각화, 실행 자동화? 가능
+Step Function Workflow studio : 업무 흐름을 시각화. 사용자가 만듬. 실행이 진짜 실행이 아니라 그냥 
 
 
 
