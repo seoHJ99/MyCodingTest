@@ -1,0 +1,8 @@
+9. S3 File Gateway : NFS/SMB 프로토콜을 사용하여 Amazon S3에서 객체를 저장 및 검색
+11. Systems Manager Parameter Store : 보안 정보 또는 일반 텍스트 구성 값을 저장, 검색 및 관리할 수 있는 기능.
+    자동 교환 기능이 제한적이여서 관리의 오버헤드는 크게 줄이지 못함
+12. AWS Global Accelerator :  전 세계 사용자가 이용하는 인터넷 애플리케이션의 가용성을 향상시킴.
+13. Secrets Manager : 일정에 따라 자격증명 교환. 다중 리전 비밀 복제.
+    Secrets Manager : 교환 기능이 제한적. 다른 솔루션들은 추가적인 관리와 설정 필요.
+15. AWS Firewall Manager : 방화벽 관리 기능. 방화벽 자체의 기능은 없음
+17. 그냥 다 공부.
