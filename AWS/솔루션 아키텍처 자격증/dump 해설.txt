@@ -6,3 +6,22 @@
     Secrets Manager : 교환 기능이 제한적. 다른 솔루션들은 추가적인 관리와 설정 필요.
 15. AWS Firewall Manager : 방화벽 관리 기능. 방화벽 자체의 기능은 없음
 17. 그냥 다 공부.
+
+
+---
+
+24. Cost Explorer: 지난 13개월간의 사용 데이터를 확인. 향후 12개월 예상치 확인. 비용 및 사용량 조회. 시각화 인터페이스
+26. AWS Config : AWS 리소스의 구성을 지속적으로 평가, 감사 및 기록할 수 있는 서비스
+    Amazon Inspector : EC2 인스턴스의 보안 및 규정 준수를 평가하는 도구
+
+27. https://docs.aws.amazon.com/ko_kr/AmazonCloudWatch/latest/monitoring/cloudwatch-dashboard-sharing.html
+33. Kinesis Data Stream : 실시간으로 데이터 수집하는 입구이자 저장소. 데이터에 대한 메시지 큐라고도 할 수 있음.
+    Kinesis Data Firehose : DataLake 역할을 할 수 있는 S3, Redshift 같은 저장소에 데이터를 전달하는 것이 목적. 람다를 통해 가공도 가능
+35. AWS Shield Advanced: DDoS 공격으로부터 보호하기 위한 강화된 보호 기능을 제공하는 서비스. 특히 ELB, CloudFront, Route 53이 대상
+    GuardDuty : AWS 계정과 리소스에 대한 위협을 탐지하는 서비스. 방어x
+    Amazon Inspector: EC2 인스턴스의 보안 취약점을 평가하는 서비스.
+39. Provisioned IOPS SSD: 짧은 지연 시간이 필요한 중요하고 IOPS 집약적이며 처리량 집약적 워크로드를 위해 설계.
+        - 
+    메모리 최적화 클래스 인스턴스 : 높은 메모리와 높은 I/O 성능을 제공하여 대규모 데이터베이스 작업에 적합
+    버스터블 클래스 인스턴스 : 일시적으로 높은 성능을 제공. 개발/소규모 워크로드에 적합
+
