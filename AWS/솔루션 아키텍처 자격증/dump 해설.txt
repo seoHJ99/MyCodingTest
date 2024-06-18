@@ -27,3 +27,5 @@
 
 41. Amazon AppFlow: AppFlow는 SaaS 소스에서 Amazon S3로 데이터를 자동으로 전송할 수 있는 관리형 서비스
         - 덕분에 EC2 없이도 데이터 자동 수집
+
+50.
