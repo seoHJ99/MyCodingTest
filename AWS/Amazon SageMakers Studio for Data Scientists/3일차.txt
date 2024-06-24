@@ -83,6 +83,6 @@ RAG 만드는 aws 기능.
 s3 의 데이터를 이용해 만든다.
 
 Agent
-자동으로 프롬프트를 작성.
+자동으로 프롬프트를 작성. 프로비저닝.
 action group 은 api 를 이용해서 람다를 실행.
 LLM에서 동작. Knowledge Base 는 옵션.
