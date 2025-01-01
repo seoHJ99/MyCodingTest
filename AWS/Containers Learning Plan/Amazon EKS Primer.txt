@@ -97,8 +97,6 @@ Amazon CloudWatch Container Insights : EKS 에서 지표 및 로그를 수집, �
     - 에이전트 필요
 
 
-
-
 AWS App Mesh
 서비스 모니터링 및 제어를 일련화.
 마이크로 서비스 관리 도움
