@@ -1,3 +1,5 @@
+package main.lv2;
+
 import java.util.*;
 
 class ExpertOfSelfPlaying {
